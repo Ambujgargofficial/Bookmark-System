@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Cloud Bookmarks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --white: #ffffff; --text: #1e293b; --radius: 12px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; }
+        
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        
+        /* --- LOADER --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
+        .spinner { border: 4px solid #cbd5e1; border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loader-text { font-weight: bold; color: var(--primary); }
+
+        /* --- AUTH SCREEN --- */
+        #auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; display: none; }
+        .auth-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; }
+        
+        /* Restrict spinners on number inputs */
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; }
+        
+        .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 1em; }
+        .btn-full:active { transform: scale(0.98); }
+        .toggle-link { margin-top: 15px; cursor: pointer; color: var(--primary); text-decoration: underline; display: block; font-size: 0.9em; }
+        
+        /* Support Box for PIN Reset */
+        .support-box { margin-top: 20px; padding: 15px; background: #eff6ff; border: 1px dashed var(--primary); border-radius: 8px; font-size: 0.9em; color: #1e40af; text-align: center; }
+        .support-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .support-btn:hover { background: #128c7e; transform: scale(1.05); }
+
+        /* --- APP UI LAYOUT --- */
+        #app-container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr; gap: 20px; display: none; transition: 0.3s; }
+        #app-container.with-sidebar { grid-template-columns: 320px 1fr; }
+        @media (max-width: 768px) { #app-container.with-sidebar { grid-template-columns: 1fr; } }
+        
+        .sidebar { background: var(--white); padding: 20px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; display: none; }
+        #app-container.with-sidebar .sidebar { display: block; }
+        .main-area { background: #e2e8f0; padding: 20px; border-radius: var(--radius); min-height: 80vh; }
+        
+        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        /* --- BOOKMARK CARDS --- */
+        .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 25px 0 15px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; }
+        .bookmarks-container { display: flex; gap: 15px; }
+        
+        /* GRID VIEW (Horizontal) */
+        .view-grid { flex-wrap: wrap; }
+        .view-grid .b-card { 
+            background: var(--white); width: 140px; height: 140px; border-radius: 12px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; text-decoration: none; color: var(--text); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: 0.2s;
+        }
+        .view-grid .b-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .view-grid .b-icon { font-size: 2.5em; margin-bottom: 10px; color: var(--primary); }
+        .view-grid .b-title { font-weight: 600; font-size: 0.9em; text-align: center; word-break: break-word; padding: 0 5px; }
+        .view-grid .action-btns { position: absolute; top: 5px; right: 5px; display: none; gap: 5px; }
+        .view-grid .b-card:hover .action-btns { display: flex; }
+
+        /* LIST VIEW (Vertical) */
+        .view-list { flex-direction: column; width: 100%; }
+        .view-list .b-card {
+            background: var(--white); width: 100%; padding: 15px; border-radius: 8px; display: flex; 
+            align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box; margin-bottom: 10px;
+        }
+        .view-list .card-content { display: flex; align-items: center; gap: 15px; }
+        .view-list .b-icon { font-size: 1.5em; color: var(--primary); width: 30px; text-align: center; }
+        .view-list .action-btns { display: flex; gap: 10px; }
+
+        /* ACTIONS & ICONS */
+        .action-btn { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-edit { background: #f59e0b; color: white; }
+        .btn-edit:hover { background: #d97706; }
+        .btn-del { background: #ef4444; color: white; }
+        .btn-del:hover { background: #dc2626; }
+        
+        .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #eee; padding: 5px; border-radius: 6px; }
+        .icon-option { text-align: center; padding: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .icon-option:hover { background: #f1f5f9; }
+        .icon-option.selected { background: var(--primary); color: white; }
+        
+        .control-group { margin-bottom: 15px; }
+        .control-group select, .control-group input[type="color"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<!-- FULL SCREEN LOADER -->
+<div id="loader">
+    <div class="spinner"></div>
+    <div id="loader-text">Verifying Security...</div>
+</div>
+
+<!-- AUTHENTICATION CONTAINER -->
+<div id="auth-container">
+    
+    <!-- Login Form -->
+    <div id="login-form" class="auth-card">
+        <div style="margin-bottom: 25px;">
+            <i class="fa-solid fa-bookmark" style="font-size: 3em; color: var(--primary);"></i>
+            <h1 style="font-size: 1.5em; margin: 10px 0 0 0; color: var(--text);">Your Bookmark System</h1>
+        </div>
+        <h2 style="margin-top: 0; font-size: 1.2em; color: #64748b;">Secure Login</h2>
+        <div class="input-group">
+            <label>Mobile Number (10 Digits)</label>
+            <input type="number" id="login-mobile" oninput="limitMobile(this)">
+        </div>
+        <div class="input-group">
+            <label>PIN (6 Digits)</label>
+            <input type="password" id="login-pin" maxlength="6">
+        </div>
+        <button class="btn-full" onclick="doLogin()">Login</button>
+        <div class="toggle-link" onclick="toggleAuth('reset')">Forgot PIN?</div>
+        <div class="toggle-link" onclick="toggleAuth('signup')">Create New Account</div>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup-form" class="auth-card hidden">
+        <div style="margin-bottom: 25px;">
+            <i class="fa-solid fa-bookmark" style="font-size: 3em; color: var(--primary);"></i>
+            <h1 style="font-size: 1.5em; margin: 10px 0 0 0; color: var(--text);">Your Bookmark System</h1>
+        </div>
+        <h2 style="margin-top: 0; font-size: 1.2em; color: #64748b;">Sign Up</h2>
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="signup-name">
+        </div>
+        <div class="input-group">
+            <label>Mobile Number (10 Digits)</label>
+            <input type="number" id="signup-mobile" oninput="limitMobile(this)">
+        </div>
+        <div class="input-group">
+            <label>Email (Optional)</label>
+            <input type="email" id="signup-email">
+        </div>
+        <div class="input-group">
+            <label>Set PIN (6 Digits)</label>
+            <input type="password" id="signup-pin" maxlength="6">
+        </div>
+        <button class="btn-full" onclick="doSignup()">Create Account</button>
+        <div class="toggle-link" onclick="toggleAuth('login')">Back to Login</div>
+    </div>
+
+    <!-- Reset PIN Form -->
+    <div id="reset-form" class="auth-card hidden">
+        <div style="margin-bottom: 25px;">
+            <i class="fa-solid fa-bookmark" style="font-size: 3em; color: var(--primary);"></i>
+            <h1 style="font-size: 1.5em; margin: 10px 0 0 0; color: var(--text);">Your Bookmark System</h1>
+        </div>
+        <h2 style="margin-top: 0; font-size: 1.2em; color: #64748b;">Reset PIN</h2>
+        <div class="input-group">
+            <label>Registered Mobile Number</label>
+            <input type="number" id="reset-mobile" oninput="limitMobile(this)">
+        </div>
+        <div class="input-group">
+            <label>Registered Email</label>
+            <input type="email" id="reset-email">
+        </div>
+        <div class="input-group">
+            <label>New PIN (6 Digits)</label>
+            <input type="password" id="reset-new-pin" maxlength="6">
+        </div>
+        <button class="btn-full" onclick="doResetPin()">Update PIN</button>
+        
+        <!-- Admin Support Section -->
+        <div class="support-box">
+            <i class="fa-solid fa-life-ring"></i> <strong>Need Help?</strong><br>
+            <span style="font-size:0.85em; color:#555;">If you haven't linked an email, contact the Admin directly to reset your account.</span>
+            
+            <a href="https://wa.me/917017024586?text=Hello Mr. Ambuj Garg, I forgot my App PIN and my email is not linked. Please help me reset it." target="_blank" class="support-btn">
+                <i class="fa-brands fa-whatsapp"></i> Chat with Admin
+            </a>
+            <div style="margin-top:8px; font-weight:bold; font-size:0.85em;">Mr. Ambuj Garg: +91-7017024586</div>
+        </div>
+
+        <div class="toggle-link" onclick="toggleAuth('login')">Back to Login</div>
+    </div>
+</div>
+
+<!-- MAIN APP DASHBOARD -->
+<div id="app-container">
+    
+    <div class="user-header" style="grid-column: 1 / -1;">
+        <div class="welcome-msg" id="welcome-text"></div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="toggleSidebar()" style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;"><i class="fa-solid fa-sliders"></i> Manage</button>
+            <button class="logout-btn" onclick="doLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- Sidebar Controls -->
+    <div class="sidebar">
+        <!-- Bookmark Form -->
+        <h3 id="form-title"><i class="fa-solid fa-plus-circle"></i> New Bookmark</h3>
+        <input type="hidden" id="bm-id">
+        <div class="input-group">
+            <input type="text" id="bm-title" placeholder="Website Title (e.g., Google)">
+        </div>
+        <div class="input-group">
+            <input type="text" id="bm-url" placeholder="URL (e.g., https://google.com)">
+        </div>
+        <div class="input-group">
+            <input type="text" id="bm-category" list="cat-list" placeholder="Category (e.g., Work, Social)">
+            <datalist id="cat-list"></datalist>
+        </div>
+        <div class="input-group">
+            <select id="bm-priority">
+                <option value="None">Priority: None</option>
+                <option value="Daily">Daily Use</option>
+                <option value="Weekly">Weekly Use</option>
+                <option value="Monthly">Monthly Use</option>
+            </select>
+        </div>
+        
+        <label style="font-size:0.8em; font-weight:bold; margin-top:5px; display:block;">Select Icon:</label>
+        <div class="icon-grid" id="icon-selector"></div>
+        <input type="hidden" id="bm-icon">
+        
+        <button class="btn-full" id="save-btn" onclick="saveBookmark()">Add Bookmark</button>
+        <button class="btn-full" id="cancel-btn" style="background:#64748b; display:none;" onclick="resetForm()">Cancel Editing</button>
+
+        <hr style="margin:20px 0; border:0; border-top:1px solid #ddd;">
+        
+        <!-- User Settings / Theme Preferences -->
+        <h4><i class="fa-solid fa-palette"></i> Customize View</h4>
+        <div class="control-group">
+            <label>Layout Style</label>
+            <select id="pref-layout" onchange="updatePreferences()">
+                <option value="grid">Grid View (Boxes)</option>
+                <option value="list">List View (Rows)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Theme Color</label>
+            <input type="color" id="pref-color" onchange="updatePreferences()" style="height:40px; cursor:pointer;">
+        </div>
+    </div>
+
+    <!-- Bookmarks Display Area -->
+    <div class="main-area">
+        <div id="bookmarks-target"></div>
+    </div>
+</div>
+
+<script>
+    // ******************************************************
+    // ⚠️ PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE ⬇️
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLaE8poowmolrwbb24mFZJmvPQTK7A9pQX9H4zLY2q9PWyqnaqF3UgNdwWz6J9raOAug/exec"; 
+    // ******************************************************
+
+    let currentUser = null;
+    let bookmarks = [];
+    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb' };
+    
+    // Icon Library List
+    const commonIcons = [
+        "fa-brands fa-google", "fa-brands fa-youtube", "fa-brands fa-whatsapp", "fa-brands fa-instagram", "fa-brands fa-linkedin", "fa-brands fa-github",
+        "fa-solid fa-house", "fa-solid fa-envelope", "fa-solid fa-briefcase", "fa-solid fa-code", "fa-solid fa-globe", "fa-solid fa-cart-shopping",
+        "fa-solid fa-music", "fa-solid fa-video", "fa-solid fa-image", "fa-solid fa-book", "fa-solid fa-calendar", "fa-solid fa-chart-line"
+    ];
+
+    window.onload = function() { 
+        populateIcons(); 
+        initApp(); 
+    };
+
+    // --- UTILITIES ---
+    // Enforce strictly 10 digits for mobile number inputs
+    function limitMobile(el) {
+        if (el.value.length > 10) el.value = el.value.slice(0, 10);
+    }
+
+    // Toggle loader screen
+    function toggleLoader(show, text) { 
+        const loaderObj = document.getElementById('loader');
+        loaderObj.style.display = show ? 'flex' : 'none'; 
+        if(text) document.getElementById('loader-text').innerText = text; 
+    }
+
+    // Toggle authentication forms
+    function toggleAuth(screen) { 
+        document.querySelectorAll('.auth-card').forEach(c => c.classList.add('hidden'));
+        if(screen === 'login') document.getElementById('login-form').classList.remove('hidden');
+        if(screen === 'signup') document.getElementById('signup-form').classList.remove('hidden');
+        if(screen === 'reset') document.getElementById('reset-form').classList.remove('hidden');
+    }
+
+    // --- APP INITIALIZATION & SECURITY ---
+    function initApp() {
+        const session = localStorage.getItem('user_session_final');
+        if (session) {
+            toggleLoader(true, "Verifying Security...");
+            currentUser = JSON.parse(session);
+            
+            // Background check against Google Sheet
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "login", mobile: currentUser.mobile, pin: currentUser.pin })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.result === "success") {
+                    loadUserData(data.bookmarks);
+                    openDashboard();
+                } else {
+                    alert("Session Expired or PIN Changed for security!");
+                    doLogout();
+                }
+            }).catch(() => {
+                alert("Connection Error. Please check your internet.");
+                toggleLoader(false); 
+                document.getElementById('auth-container').style.display = 'flex';
+            });
+        } else {
+            toggleLoader(false);
+            document.getElementById('auth-container').style.display = 'flex';
+        }
+    }
+
+    // --- DATA MANAGEMENT ---
+    function loadUserData(jsonString) {
+        let parsed = JSON.parse(jsonString || "[]");
+        
+        // Support both old array format and new object format
+        if (parsed.items) {
+            bookmarks = parsed.items;
+            if(parsed.settings) userSettings = parsed.settings;
+        } else if(Array.isArray(parsed)) {
+            bookmarks = parsed; 
+        }
+        
+        // Apply Loaded Settings to UI
+        document.getElementById('pref-layout').value = userSettings.layout;
+        document.getElementById('pref-color').value = userSettings.theme;
+        document.documentElement.style.setProperty('--primary', userSettings.theme);
+    }
+
+    function syncToCloud() {
+        if(!currentUser) return;
+        
+        const payload = { settings: userSettings, items: bookmarks };
+        
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({ 
+                action: "sync", 
+                mobile: currentUser.mobile, 
+                pin: currentUser.pin, 
+                bookmarks: JSON.stringify(payload) 
+            })
+        });
+    }
+
+    // --- BOOKMARK OPERATIONS ---
+    function saveBookmark() {
+        const id = document.getElementById('bm-id').value;
+        const title = document.getElementById('bm-title').value.trim();
+        const url = document.getElementById('bm-url').value.trim();
+        const category = document.getElementById('bm-category').value.trim() || 'General';
+        const priority = document.getElementById('bm-priority').value;
+        const icon = document.getElementById('bm-icon').value || 'fa-solid fa-link';
+
+        if(!title || !url) return alert("Title and URL are required fields.");
+
+        // Clean URL to ensure it has http/https
+        let finalUrl = url;
+        if (!/^https?:\/\//i.test(finalUrl)) {
+            finalUrl = 'https://' + finalUrl;
+        }
+
+        if (id) {
+            // Update
+            const idx = bookmarks.findIndex(b => b.id == id);
+            if(idx !== -1) bookmarks[idx] = { id: parseInt(id), title, url: finalUrl, category, priority, icon };
+        } else {
+            // Insert
+            bookmarks.push({ id: Date.now(), title, url: finalUrl, category, priority, icon });
+        }
+        
+        resetForm();
+        renderBookmarks();
+        syncToCloud();
+        toggleSidebar(false); // Close sidebar after saving
+    }
+
+    function editBookmark(id) {
+        toggleSidebar(true); // Open sidebar automatically when editing
+        const bm = bookmarks.find(b => b.id === id);
+        if(!bm) return;
+        
+        document.getElementById('bm-id').value = bm.id;
+        document.getElementById('bm-title').value = bm.title;
+        document.getElementById('bm-url').value = bm.url;
+        document.getElementById('bm-category').value = bm.category;
+        document.getElementById('bm-priority').value = bm.priority;
+        document.getElementById('bm-icon').value = bm.icon;
+        
+        // Update UI Button
+        document.getElementById('save-btn').innerText = 'Update Bookmark';
+        document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-pen"></i> Edit Bookmark';
+        document.getElementById('cancel-btn').style.display = 'block';
+        
+        // Highlight icon in grid
+        document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected'));
+        // (Visual highlight logic can be extended if needed)
+    }
+
+    function resetForm() {
+        document.getElementById('bm-id').value = '';
+        document.getElementById('bm-title').value = '';
+        document.getElementById('bm-url').value = '';
+        document.getElementById('save-btn').innerText = 'Add Bookmark';
+        document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-plus-circle"></i> New Bookmark';
+        document.getElementById('cancel-btn').style.display = 'none';
+    }
+
+    function deleteBookmark(id) {
+        if(confirm("Are you sure you want to delete this bookmark?")) {
+            bookmarks = bookmarks.filter(b => b.id !== id);
+            if(document.getElementById('bm-id').value == id) resetForm();
+            renderBookmarks();
+            syncToCloud();
+        }
+    }
+
+    function updatePreferences() {
+        userSettings.layout = document.getElementById('pref-layout').value;
+        userSettings.theme = document.getElementById('pref-color').value;
+        document.documentElement.style.setProperty('--primary', userSettings.theme);
+        renderBookmarks();
+        syncToCloud();
+    }
+
+    // --- RENDERING ENGINE ---
+    function renderBookmarks() {
+        const container = document.getElementById('bookmarks-target');
+        container.innerHTML = '';
+        
+        // Update Auto-complete Datalist
+        const cats = [...new Set(bookmarks.map(b => b.category))];
+        document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}">`).join('');
+
+        if(bookmarks.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding: 50px 0; color:#888;"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom:15px; opacity:0.5;"></i><br>No bookmarks found. Add your first one!</div>';
+            return;
+        }
+
+        // Grouping
+        let groups = {};
+        bookmarks.forEach(b => { 
+            if(!groups[b.category]) groups[b.category] = []; 
+            groups[b.category].push(b); 
+        });
+
+        // Building UI
+        Object.keys(groups).sort().forEach(cat => {
+            const header = document.createElement('div');
+            header.className = 'section-title'; 
+            header.innerText = cat;
+            container.appendChild(header);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `bookmarks-container ${userSettings.layout === 'list' ? 'view-list' : 'view-grid'}`;
+            
+            groups[cat].forEach(b => {
+                const card = document.createElement('div');
+                card.className = 'b-card';
+                card.onclick = (e) => { 
+                    // Open link only if user didn't click the edit or delete buttons
+                    if(!e.target.closest('.action-btn')) window.open(b.url, '_blank'); 
+                };
+                
+                const actionButtonsHTML = `
+                    <div class="action-btns">
+                        <button class="action-btn btn-edit" title="Edit" onclick="editBookmark(${b.id})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="action-btn btn-del" title="Delete" onclick="deleteBookmark(${b.id})"><i class="fa-solid fa-trash"></i></button>
+                    </div>`;
+
+                if (userSettings.layout === 'list') {
+                    card.innerHTML = `
+                        <div class="card-content">
+                            <i class="${b.icon} b-icon"></i>
+                            <span class="b-title">${b.title}</span>
+                        </div>
+                        ${actionButtonsHTML}
+                    `;
+                } else {
+                    card.innerHTML = `
+                        ${actionButtonsHTML}
+                        <i class="${b.icon} b-icon"></i>
+                        <div class="b-title">${b.title}</div>
+                    `;
+                }
+                wrapper.appendChild(card);
+            });
+            container.appendChild(wrapper);
+        });
+    }
+
+    // --- AUTHENTICATION API CALLS ---
+    function doLogin() {
+        const mobile = document.getElementById('login-mobile').value;
+        const pin = document.getElementById('login-pin').value;
+        
+        if(!mobile || !pin) return alert("Please fill in all fields.");
+        if(mobile.length !== 10) return alert("Mobile number must be exactly 10 digits.");
+        
+        toggleLoader(true, "Logging in securely...");
+        
+        fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: "login", mobile: mobile, pin: pin }) 
+        })
+        .then(r => r.json())
+        .then(d => {
+            if(d.result === "success") {
+                currentUser = { mobile: mobile, pin: pin, name: d.name };
+                localStorage.setItem('user_session_final', JSON.stringify(currentUser));
+                loadUserData(d.bookmarks);
+                openDashboard();
+            } else { 
+                alert(d.message); 
+                toggleLoader(false); 
+            }
+        })
+        .catch(err => { alert("Connection Failed. Please try again."); toggleLoader(false); });
+    }
+    
+    function doSignup() {
+        const name = document.getElementById('signup-name').value.trim();
+        const mobile = document.getElementById('signup-mobile').value;
+        const email = document.getElementById('signup-email').value.trim();
+        const pin = document.getElementById('signup-pin').value;
+        
+        if(!name || !mobile || !pin) return alert("Please fill the required details.");
+        if(mobile.length !== 10) return alert("Mobile number must be exactly 10 digits.");
+        if(pin.length !== 6) return alert("PIN must be exactly 6 digits.");
+
+        toggleLoader(true, "Creating Account...");
+        
+        fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: "signup", name: name, mobile: mobile, email: email, pin: pin }) 
+        })
+        .then(r => r.json())
+        .then(d => { 
+            alert(d.message); 
+            toggleLoader(false); 
+            if(d.result === "success") toggleAuth('login'); 
+        });
+    }
+    
+    function doResetPin() {
+        const mobile = document.getElementById('reset-mobile').value;
+        const email = document.getElementById('reset-email').value.trim();
+        const newPin = document.getElementById('reset-new-pin').value;
+        
+        if(!mobile || !email || !newPin) return alert("All fields are required to verify your identity.");
+        if(mobile.length !== 10) return alert("Mobile number must be exactly 10 digits.");
+        if(newPin.length !== 6) return alert("New PIN must be exactly 6 digits.");
+        
+        toggleLoader(true, "Resetting PIN...");
+        
+        fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            body: JSON.stringify({ action: "reset_pin", mobile: mobile, email: email, new_pin: newPin }) 
+        })
+        .then(r => r.json())
+        .then(d => { 
+            alert(d.message); 
+            toggleLoader(false); 
+            if(d.result === "success") toggleAuth('login'); 
+        });
+    }
+    
+    function doLogout() {
+        localStorage.removeItem('user_session_final');
+        currentUser = null; 
+        bookmarks = [];
+        
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('auth-container').style.display = 'flex';
+        document.getElementById('login-pin').value = '';
+        toggleLoader(false);
+    }
+    
+    function openDashboard() {
+        toggleLoader(false);
+        document.getElementById('auth-container').style.display = 'none';
+        const appContainer = document.getElementById('app-container');
+        appContainer.style.display = 'grid';
+        appContainer.classList.remove('with-sidebar'); // Keep it clean by default
+        document.getElementById('welcome-text').innerText = `Welcome back, ${currentUser.name || 'User'}!`;
+        renderBookmarks();
+    }
+
+    function toggleSidebar(forceOpen = null) {
+        const container = document.getElementById('app-container');
+        if (forceOpen === true) {
+            container.classList.add('with-sidebar');
+        } else if (forceOpen === false) {
+            container.classList.remove('with-sidebar');
+        } else {
+            container.classList.toggle('with-sidebar');
+        }
+    }
+    
+    // Auto-populate icons on load
+    function populateIcons() {
+        const grid = document.getElementById('icon-selector');
+        commonIcons.forEach(iconClass => {
+            const div = document.createElement('div'); 
+            div.className = 'icon-option'; 
+            div.innerHTML = `<i class="${iconClass} fa-lg"></i>`;
+            
+            div.onclick = () => { 
+                document.getElementById('bm-icon').value = iconClass; 
+                document.querySelectorAll('.icon-option').forEach(e => e.classList.remove('selected')); 
+                div.classList.add('selected'); 
+            };
+            grid.appendChild(div);
+        });
+    }
+</script>
+</body>
+</html>
