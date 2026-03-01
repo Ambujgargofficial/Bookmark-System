@@ -8,8 +8,19 @@
     <!-- Drag and Drop script -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --white: #ffffff; --text: #1e293b; --radius: 12px; --card-size: 140px; --icon-size: 2.5em; --title-size: 0.9em; --list-cols: 1; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
+        :root { 
+            --primary: #2563eb; 
+            --bg: #f8fafc; 
+            --white: #ffffff; 
+            --text: #1e293b; 
+            --radius: 12px; 
+            --card-size: 140px; 
+            --icon-size: 2.5em; 
+            --title-size: 0.9em; 
+            --list-cols: 1; 
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body { font-family: var(--font-family); background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
         
         /* --- UTILITIES --- */
         .hidden { display: none !important; }
@@ -33,7 +44,7 @@
         .input-group input, .control-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; transition: background 0.3s, color 0.3s, border-color 0.3s; }
         .input-group input:disabled { background-color: #f1f5f9; cursor: not-allowed; color: #64748b; }
         
-        .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 1em; }
+        .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 1em; font-family: inherit; }
         .btn-full:active { transform: scale(0.98); }
         .btn-full:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-secondary { background: #64748b; margin-top: 5px; }
@@ -54,7 +65,7 @@
         .main-area { background: #e2e8f0; padding: 15px; border-radius: var(--radius); min-height: 80vh; transition: background 0.3s; }
         
         .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.3s; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit;}
 
         /* --- BOOKMARK CARDS AND FILTERS --- */
         .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; text-transform: capitalize; transition: color 0.3s; }
@@ -63,7 +74,7 @@
         /* Main Category Filter Styles */
         .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
         .category-filter::-webkit-scrollbar { display: none; }
-        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em;}
+        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em; font-family: inherit;}
         .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
@@ -71,7 +82,7 @@
         .subcategory-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; border-bottom: 1px dashed #cbd5e1; align-items: center; transition: border-color 0.3s; }
         .subcategory-filter::before { content: "Sub-Categories:"; font-size: 0.8em; font-weight: bold; color: #64748b; padding-right: 5px; }
         .subcategory-filter::-webkit-scrollbar { display: none; }
-        .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: 0.2s; color: #475569; white-space: nowrap; font-weight: 600;}
+        .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: 0.2s; color: #475569; white-space: nowrap; font-weight: 600; font-family: inherit;}
         .sub-filter-btn:hover { border-color: var(--primary); color: var(--primary); background: #e0f2fe; }
         .sub-filter-btn.active { background: #bae6fd; color: #0369a1; border-color: #38bdf8; }
 
@@ -119,7 +130,7 @@
         .icon-option.selected { background: var(--primary); color: white; }
         
         .control-group { margin-bottom: 15px; }
-        .control-group select, .control-group input[type="color"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; }
+        .control-group select, .control-group input[type="color"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit;}
         
         /* Drag and Drop Styling */
         .sortable-ghost { opacity: 0.4; background: #e2e8f0; border: 2px dashed var(--primary); }
@@ -133,6 +144,10 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
+
+        /* --- THEME DROPDOWN BUTTONS --- */
+        .theme-btn { padding: 10px; text-align: left; background: transparent; border: none; cursor: pointer; border-radius: 4px; font-size: 0.9em; transition: 0.2s; color: var(--text); display: flex; align-items: center; width: 100%; }
+        .theme-btn:hover { background: #f1f5f9; }
 
         /* --- DARK MODE OVERRIDES --- */
         body.dark-mode { --bg: #0f172a; --white: #1e293b; --text: #f1f5f9; }
@@ -157,6 +172,8 @@
         body.dark-mode .sortable-ghost { background: #334155; border-color: var(--primary); }
         body.dark-mode .theme-divider { border-right-color: #475569 !important; }
         body.dark-mode #theme-icon, body.dark-mode #theme-text { color: #cbd5e1 !important; }
+        body.dark-mode #theme-dropdown { background: #1e293b !important; border-color: #334155 !important; }
+        body.dark-mode .theme-btn:hover { background: #334155; }
         
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
@@ -275,6 +292,16 @@
         <div class="welcome-msg" id="welcome-text"></div>
         
         <div style="display: flex; gap: 10px; align-items: center;">
+            <!-- Theme Selection in Header -->
+            <div style="position: relative; display: flex; align-items: center; gap: 8px; border-right: 1px solid #cbd5e1; padding-right: 10px; margin-right: 5px; transition: border-color 0.3s;" class="theme-divider theme-selector-area">
+                <button onclick="toggleThemeMenu()" style="background: transparent; border: none; color: #64748b; font-size: 1.2em; cursor: pointer; transition: color 0.3s;" title="Change Theme">
+                    <i class="fa-solid fa-palette"></i>
+                </button>
+                <div id="theme-dropdown" class="hidden" style="position: absolute; top: 35px; right: 0; background: var(--white); border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 1000; width: 170px; display: flex; flex-direction: column; padding: 5px;">
+                    <!-- Theme options populated by JS -->
+                </div>
+            </div>
+
             <!-- Dark Mode Toggle in Header -->
             <div class="theme-divider" style="display: flex; align-items: center; gap: 8px; margin-right: 5px; border-right: 1px solid #cbd5e1; padding-right: 15px; transition: border-color 0.3s;">
                 <i class="fa-solid fa-moon" id="theme-icon" style="color: #64748b; font-size: 1.1em; transition: color 0.3s;"></i>
@@ -285,7 +312,7 @@
                 </label>
             </div>
             
-            <button onclick="toggleSidebar()" style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;"><i class="fa-solid fa-sliders"></i> Manage</button>
+            <button onclick="toggleSidebar()" style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit;"><i class="fa-solid fa-sliders"></i> Manage</button>
             <button class="logout-btn" onclick="doLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
         </div>
     </div>
@@ -371,14 +398,37 @@
 
     let currentUser = null;
     let bookmarks = [];
-    // Added new properties to save drag and drop order and darkMode
-    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1', categoryOrder: [], subCategoryOrder: {}, darkMode: false };
+    
+    // Added new properties to save drag and drop order, darkMode, and theme styling
+    let userSettings = { 
+        layout: 'grid', 
+        sortBy: 'category', 
+        theme: '#2563eb', 
+        themeName: 'default',
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        cardSize: 'md', 
+        listCols: '1', 
+        categoryOrder: [], 
+        subCategoryOrder: {}, 
+        darkMode: false 
+    };
     
     // Filter States
     let activeFilter = 'All'; // Main Category Filter
     let activeSubFilter = 'All'; // Sub Category Filter
-    
     let isFetchingEmail = false;
+
+    // Stylish and Professional Theme Presets
+    const themePresets = {
+        'default': { name: 'Default Blue', color: '#2563eb', font: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" },
+        'modern': { name: 'Modern Cyan', color: '#0ea5e9', font: "'Trebuchet MS', 'Lucida Sans Unicode', sans-serif" },
+        'elegant': { name: 'Elegant Slate', color: '#475569', font: "'Georgia', serif" },
+        'sunset': { name: 'Sunset Orange', color: '#f97316', font: "'Arial', sans-serif" },
+        'forest': { name: 'Forest Green', color: '#16a34a', font: "'Verdana', sans-serif" },
+        'royal': { name: 'Royal Purple', color: '#9333ea', font: "'Palatino Linotype', 'Book Antiqua', Palatino, serif" },
+        'rose': { name: 'Rose Red', color: '#e11d48', font: "Tahoma, sans-serif" },
+        'cyber': { name: 'Retro Green', color: '#059669', font: "'Courier New', Courier, monospace" }
+    };
     
     // Icon Library List
     const commonIcons = [
@@ -391,8 +441,49 @@
 
     window.onload = function() { 
         populateIcons(); 
+        populateThemes();
         initApp(); 
     };
+
+    // Global click listener to close theme dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('.theme-selector-area')) {
+            const dropdown = document.getElementById('theme-dropdown');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        }
+    });
+
+    // --- THEME MANAGEMENT ---
+    function populateThemes() {
+        const dropdown = document.getElementById('theme-dropdown');
+        dropdown.innerHTML = '';
+        Object.keys(themePresets).forEach(key => {
+            const t = themePresets[key];
+            const btn = document.createElement('button');
+            btn.className = 'theme-btn';
+            btn.style.fontFamily = t.font;
+            btn.innerHTML = `<span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${t.color}; margin-right:8px;"></span> ${t.name}`;
+            btn.onclick = () => selectTheme(key);
+            dropdown.appendChild(btn);
+        });
+    }
+
+    function toggleThemeMenu() {
+        document.getElementById('theme-dropdown').classList.toggle('hidden');
+    }
+
+    function selectTheme(key) {
+        if(themePresets[key]) {
+            userSettings.themeName = key;
+            userSettings.theme = themePresets[key].color;
+            userSettings.fontFamily = themePresets[key].font;
+            document.getElementById('pref-color').value = userSettings.theme;
+            updatePreferences();
+        }
+        document.getElementById('theme-dropdown').classList.add('hidden');
+    }
 
     // --- UTILITIES AND SANITIZATION ---
     function limitMobile(el) {
@@ -511,6 +602,9 @@
         } else if(Array.isArray(parsed)) {
             bookmarks = parsed; 
         }
+
+        // Apply defaults if missing
+        if(!userSettings.fontFamily) userSettings.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
         
         document.getElementById('pref-layout').value = userSettings.layout;
         document.getElementById('pref-color').value = userSettings.theme;
@@ -527,6 +621,7 @@
         }
         
         document.documentElement.style.setProperty('--primary', userSettings.theme);
+        document.documentElement.style.setProperty('--font-family', userSettings.fontFamily);
         applySize(userSettings.cardSize);
         applyListColumns(userSettings.listCols || '1');
     }
@@ -558,7 +653,7 @@
         const title = document.getElementById('bm-title').value.trim();
         const url = document.getElementById('bm-url').value.trim();
         const category = document.getElementById('bm-category').value.trim() || 'General';
-        const subcategory = document.getElementById('bm-subcategory').value.trim() || ''; // New Field
+        const subcategory = document.getElementById('bm-subcategory').value.trim() || ''; 
         const icon = document.getElementById('bm-icon').value || 'fa-solid fa-link';
 
         if(!title || !url) return alert("Title and URL are required fields.");
@@ -593,7 +688,7 @@
         document.getElementById('bm-title').value = bm.title;
         document.getElementById('bm-url').value = bm.url;
         document.getElementById('bm-category').value = bm.category;
-        document.getElementById('bm-subcategory').value = bm.subcategory || ''; // Populate new field
+        document.getElementById('bm-subcategory').value = bm.subcategory || ''; 
         document.getElementById('bm-icon').value = bm.icon;
         
         document.getElementById('save-btn').innerText = 'Update Bookmark';
@@ -607,7 +702,8 @@
         document.getElementById('bm-id').value = '';
         document.getElementById('bm-title').value = '';
         document.getElementById('bm-url').value = '';
-        document.getElementById('bm-subcategory').value = ''; // Clear new field
+        document.getElementById('bm-category').value = '';
+        document.getElementById('bm-subcategory').value = ''; 
         document.getElementById('save-btn').innerText = 'Add Bookmark';
         document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-plus-circle"></i> New Bookmark';
         document.getElementById('cancel-btn').style.display = 'none';
@@ -637,6 +733,9 @@
         }
         
         document.documentElement.style.setProperty('--primary', userSettings.theme);
+        // Note: fontFamily is managed entirely by selectTheme, custom color keeps active font.
+        document.documentElement.style.setProperty('--font-family', userSettings.fontFamily || "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif");
+        
         applySize(userSettings.cardSize);
         applyListColumns(userSettings.listCols);
         
