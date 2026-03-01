@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Cloud Bookmarks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Naya Drag and Drop script joda gaya hai -->
+    <!-- Drag and Drop script -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; --white: #ffffff; --text: #1e293b; --radius: 12px; --card-size: 140px; --icon-size: 2.5em; --title-size: 0.9em; --list-cols: 1; }
@@ -26,7 +26,7 @@
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; transition: color 0.3s;}
         
-        /* Restrict spinners on number inputs */
+        /* Remove spinners for number inputs */
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
@@ -56,11 +56,11 @@
         .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.3s; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* --- BOOKMARK CARDS & FILTERS --- */
+        /* --- BOOKMARK CARDS AND FILTERS --- */
         .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; text-transform: capitalize; transition: color 0.3s; }
         .bookmarks-container { display: flex; gap: 12px; margin-bottom: 20px; }
         
-        /* Category Filter Styles (Main) */
+        /* Main Category Filter Styles */
         .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
         .category-filter::-webkit-scrollbar { display: none; }
         .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em;}
@@ -161,7 +161,7 @@
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
             .user-header .welcome-msg { display: none; } /* Hide welcome msg on mobile to save space */
-            #theme-text { display: none; } /* Hide the text on very small screens to save space */
+            #theme-text { display: none; } /* Hide text on small screens */
         }
     </style>
 </head>
@@ -292,10 +292,12 @@
 
     <!-- Sidebar Controls -->
     <div class="sidebar">
+        <!-- Close Icon button -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h3 id="form-title" style="margin: 0;"><i class="fa-solid fa-plus-circle"></i> New Bookmark</h3>
             <button onclick="toggleSidebar(false)" style="background: transparent; border: none; color: #ef4444; font-size: 1.5em; cursor: pointer; padding: 0;" title="Close Window"><i class="fa-solid fa-circle-xmark"></i></button>
         </div>
+
         <input type="hidden" id="bm-id">
         <div class="input-group">
             <input type="text" id="bm-title" placeholder="Website Title (e.g., Google)">
@@ -369,7 +371,7 @@
 
     let currentUser = null;
     let bookmarks = [];
-    // Drag and drop ka order save karne ke liye nayi properties add ki hain, plus darkMode
+    // Added new properties to save drag and drop order and darkMode
     let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1', categoryOrder: [], subCategoryOrder: {}, darkMode: false };
     
     // Filter States
@@ -392,7 +394,7 @@
         initApp(); 
     };
 
-    // --- UTILITIES & SANITIZATION ---
+    // --- UTILITIES AND SANITIZATION ---
     function limitMobile(el) {
         el.value = el.value.replace(/[^0-9]/g, '');
         if (el.value.length > 10) el.value = el.value.slice(0, 10);
@@ -453,7 +455,7 @@
                 } else {
                     emailInput.placeholder = d.message;
                     sendBtn.disabled = true;
-                    sendBtn.innerText = "Mobile Not Found";
+                    sendBtn.innerText = "Mobile Number Not Found";
                 }
             }).catch(() => {
                 isFetchingEmail = false;
@@ -467,6 +469,7 @@
         }
     }
 
+    // --- APP INITIALIZATION AND SECURITY ---
     function initApp() {
         const session = localStorage.getItem('user_session_final');
         if (session) {
@@ -657,10 +660,10 @@
         const container = document.getElementById('bookmarks-target');
         container.innerHTML = '';
         
-        // 1. Dropdowns ke liye Datalists populate karein
+        // 1. Populate Datalists for Dropdowns
         let rawCats = [...new Set(bookmarks.map(b => b.category))];
         
-        // Custom order apply karein categories par
+        // Apply custom order to categories
         if (userSettings.categoryOrder && userSettings.categoryOrder.length > 0) {
             rawCats.sort((a, b) => {
                 let idxA = userSettings.categoryOrder.indexOf(a);
@@ -679,7 +682,7 @@
         document.getElementById('subcat-list').innerHTML = globalSubCats.map(c => `<option value="${c}">`).join('');
 
         if(bookmarks.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding: 50px 0; color:#888;"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom:15px; opacity:0.5;"></i><br>Koi bookmark nahi mila. Apna pehla bookmark jodein!</div>';
+            container.innerHTML = '<div style="text-align:center; padding: 50px 0; color:#888;"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom:15px; opacity:0.5;"></i><br>No bookmarks found. Add your first one!</div>';
             return;
         }
 
@@ -687,11 +690,11 @@
             activeFilter = 'All';
         }
 
-        // 2. Main Category Filter render karein
+        // 2. Render Main Category Filter
         const filterDiv = document.createElement('div');
         filterDiv.className = 'category-filter';
         
-        // 'All' button ko static-btn class di hai taaki ise drag na kiya ja sake
+        // 'All' button has static-btn class to prevent dragging
         let allBtn = `<button class="filter-btn static-btn ${activeFilter === 'All' ? 'active' : ''}" onclick="setCategoryFilter('All')">All</button>`;
         let catBtns = cats.map(c => `<button class="filter-btn ${activeFilter === c ? 'active' : ''}" onclick="setCategoryFilter('${c}')">${c}</button>`).join('');
         filterDiv.innerHTML = allBtn + catBtns;
@@ -700,8 +703,8 @@
         // Category Drag and Drop (Sortable)
         Sortable.create(filterDiv, {
             animation: 150,
-            filter: '.static-btn', // 'All' button ko drag hone se rokein
-            delay: 200, delayOnTouchOnly: true, // Mobile touch scroll issue fix karne ke liye delay
+            filter: '.static-btn', // Prevent 'All' button from being dragged
+            delay: 200, delayOnTouchOnly: true, // Delay to fix mobile touch scroll issue
             onEnd: function () {
                 const btns = Array.from(filterDiv.querySelectorAll('.filter-btn:not(.static-btn)'));
                 userSettings.categoryOrder = btns.map(b => b.innerText);
@@ -712,13 +715,13 @@
         let displayItems = bookmarks;
         let hasSubcats = false;
 
-        // 3. Sub-Category Filter render karein (Agar specific category mein hain)
+        // 3. Render Sub-Category Filter (If in a specific category)
         if (activeFilter !== 'All') {
             displayItems = bookmarks.filter(b => b.category === activeFilter);
             
             let subCatsInCurrentCat = [...new Set(displayItems.map(b => b.subcategory).filter(Boolean))];
             
-            // Sub-category order apply karein
+            // Apply sub-category order
             let subOrder = (userSettings.subCategoryOrder && userSettings.subCategoryOrder[activeFilter]) || [];
             if (subOrder.length > 0) {
                 subCatsInCurrentCat.sort((a, b) => {
@@ -768,22 +771,22 @@
             activeSubFilter = 'All'; // Always 'All' when viewing all categories
         }
 
-        // Bookmarks ko unke custom order ke hisaab se sort karein
+        // Sort bookmarks by their custom order
         displayItems.sort((a, b) => (a.order || 0) - (b.order || 0));
 
         // 4. Grouping Logic
         let groups = {};
         displayItems.forEach(b => { 
-            let groupKey = 'General';
+            let groupKey = 'Default';
             if (activeFilter === 'All') {
                 // When viewing everything, group by Main Category
-                groupKey = b.category || 'General'; 
+                groupKey = b.category || 'Default'; 
             } else {
                 if (hasSubcats) {
-                    // Agar subcategory hai, toh blank walo ko 'Default' mein daalo
+                    // If subcategory exists, put blanks in 'Default'
                     groupKey = b.subcategory ? b.subcategory : 'Default'; 
                 } else {
-                    // Agar koi subcategory nahi hai, toh purana style
+                    // If no subcategory, use legacy style
                     groupKey = activeFilter; 
                 }
             }
@@ -792,13 +795,13 @@
             groups[groupKey].push(b); 
         });
 
-        // 5. Render Groups aur Cards
-        // 'Default' ko hamesha list ke end mein rakhein
+        // 5. Render Groups and Cards
+        // Always keep 'Default' at the end of the list
         let sortedKeys = Object.keys(groups).sort((a, b) => {
             if (a === 'Default') return 1;
             if (b === 'Default') return -1;
             
-            // Agar view 'All' nahi hai toh group names subcategories hain, unhe subOrder se sort karein
+            // If view is not 'All', group names are subcategories, sort them by subOrder
             if (activeFilter !== 'All' && hasSubcats) {
                 let subOrder = (userSettings.subCategoryOrder && userSettings.subCategoryOrder[activeFilter]) || [];
                 let idxA = subOrder.indexOf(a);
@@ -824,7 +827,7 @@
             groups[groupName].forEach(b => {
                 const card = document.createElement('div');
                 card.className = 'b-card cursor-grab';
-                card.setAttribute('data-id', b.id); // Reordering ke liye ID zaroori hai
+                card.setAttribute('data-id', b.id); // Needed for reordering
                 card.onclick = (e) => { 
                     if(!e.target.closest('.action-btn')) window.open(b.url, '_blank'); 
                 };
@@ -857,14 +860,14 @@
             // Cards Drag and Drop (Sortable)
             Sortable.create(wrapper, {
                 animation: 150,
-                ghostClass: 'sortable-ghost', // Drag karte waqt card ka visual style
+                ghostClass: 'sortable-ghost', // Visual style of card while dragging
                 delay: 200, delayOnTouchOnly: true, // Mobile touch scroll fix
                 onEnd: function () {
                     const cards = Array.from(wrapper.querySelectorAll('.b-card'));
                     cards.forEach((card, index) => {
                         const id = card.getAttribute('data-id');
                         const bm = bookmarks.find(b => b.id == parseInt(id));
-                        if (bm) bm.order = index; // Naya order save karein
+                        if (bm) bm.order = index; // Save new order
                     });
                     syncToCloud();
                 }
@@ -998,15 +1001,26 @@
 
     function toggleSidebar(forceOpen = null) {
         const container = document.getElementById('app-container');
+        let willOpen = false;
+        
         if (forceOpen === true) {
+            willOpen = true;
             container.classList.add('with-sidebar');
         } else if (forceOpen === false) {
+            willOpen = false;
             container.classList.remove('with-sidebar');
         } else {
+            willOpen = !container.classList.contains('with-sidebar');
             container.classList.toggle('with-sidebar');
+        }
+
+        // If sidebar is closing (via Manage button or X), reset the form
+        if (!willOpen) {
+            resetForm();
         }
     }
     
+    // Auto-populate icons on load
     function populateIcons() {
         const grid = document.getElementById('icon-selector');
         grid.innerHTML = ''; 
