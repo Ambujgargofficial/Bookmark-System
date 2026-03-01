@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Cloud Bookmarks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Naya Drag and Drop script joda gaya hai -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; --white: #ffffff; --text: #1e293b; --radius: 12px; --card-size: 140px; --icon-size: 2.5em; --title-size: 0.9em; --list-cols: 1; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; }
@@ -54,16 +56,24 @@
         .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* --- BOOKMARK CARDS --- */
-        .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; }
-        .bookmarks-container { display: flex; gap: 12px; }
+        /* --- BOOKMARK CARDS & FILTERS --- */
+        .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; text-transform: capitalize; }
+        .bookmarks-container { display: flex; gap: 12px; margin-bottom: 20px; }
         
-        /* Category Filter Styles */
-        .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 12px; scrollbar-width: none; -ms-overflow-style: none; }
+        /* Category Filter Styles (Main) */
+        .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
         .category-filter::-webkit-scrollbar { display: none; }
         .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em;}
         .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Sub-Category Filter Styles */
+        .subcategory-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; border-bottom: 1px dashed #cbd5e1; align-items: center; }
+        .subcategory-filter::before { content: "Sub-Categories:"; font-size: 0.8em; font-weight: bold; color: #64748b; padding-right: 5px; }
+        .subcategory-filter::-webkit-scrollbar { display: none; }
+        .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: 0.2s; color: #475569; white-space: nowrap; font-weight: 600;}
+        .sub-filter-btn:hover { border-color: var(--primary); color: var(--primary); background: #e0f2fe; }
+        .sub-filter-btn.active { background: #bae6fd; color: #0369a1; border-color: #38bdf8; }
 
         /* GRID VIEW (Horizontal) */
         .view-grid { flex-wrap: wrap; }
@@ -80,7 +90,7 @@
 
         /* LIST VIEW (Vertical/Grid Hybrid) */
         .view-list { display: grid; grid-template-columns: repeat(var(--list-cols), 1fr); gap: 12px; width: 100%; }
-        @media (max-width: 768px) { .view-list { grid-template-columns: 1fr; } } /* Enforce 1 column on mobile to prevent squishing */
+        @media (max-width: 768px) { .view-list { grid-template-columns: 1fr; } }
         .view-list .b-card {
             background: var(--white); width: 100%; padding: 10px 15px; border-radius: 8px; display: flex; 
             align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
@@ -91,7 +101,7 @@
         .view-list .action-btns { display: flex; gap: 10px; opacity: 0; visibility: hidden; transition: 0.2s; }
         .view-list .b-card:hover .action-btns { opacity: 1; visibility: visible; }
 
-        /* MOBILE TOUCH FALLBACK - Keep icons slightly visible on touch screens */
+        /* MOBILE TOUCH FALLBACK */
         @media (hover: none) {
             .view-grid .action-btns, .view-list .action-btns { opacity: 0.7; visibility: visible; }
         }
@@ -110,6 +120,11 @@
         
         .control-group { margin-bottom: 15px; }
         .control-group select, .control-group input[type="color"] { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; }
+        
+        /* Drag and Drop Styling */
+        .sortable-ghost { opacity: 0.4; background: #e2e8f0; border: 2px dashed var(--primary); }
+        .cursor-grab { cursor: grab; }
+        .cursor-grab:active { cursor: grabbing; }
     </style>
 </head>
 <body>
@@ -178,7 +193,6 @@
         </div>
         <h2 style="margin-top: 0; font-size: 1.2em; color: #64748b;">Reset PIN</h2>
         
-        <!-- Step 1: Request OTP -->
         <div id="reset-step-1">
             <div class="input-group">
                 <label>Registered Mobile Number</label>
@@ -186,13 +200,11 @@
             </div>
             <div class="input-group">
                 <label>Registered Email</label>
-                <!-- Disabled and auto-fetched via script -->
                 <input type="email" id="reset-email" disabled placeholder="Will auto-fetch from database...">
             </div>
             <button class="btn-full" id="btn-send-otp" onclick="requestOTP()" disabled>Enter Mobile to Fetch Email</button>
         </div>
 
-        <!-- Step 2: Verify OTP & Update PIN (Always visible now) -->
         <div id="reset-step-2" style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
             <div class="input-group" style="background: #e0f2fe; padding: 10px; border-radius: 8px;">
                 <label style="color: #0369a1;">Enter OTP from Email</label>
@@ -205,11 +217,9 @@
             <button class="btn-full" onclick="doResetPin()" style="background: #10b981;">Verify & Update PIN</button>
         </div>
         
-        <!-- Admin Support Section -->
         <div class="support-box">
             <i class="fa-solid fa-life-ring"></i> <strong>Need Help?</strong><br>
             <span style="font-size:0.85em; color:#555;">If you haven't linked an email, contact the Admin directly to reset your account.</span>
-            
             <a href="https://wa.me/917017024586?text=Hello Mr. Ambuj Garg, I forgot my App PIN and my email is not linked. Please help me reset it." target="_blank" class="support-btn">
                 <i class="fa-brands fa-whatsapp"></i> Chat with Admin
             </a>
@@ -233,7 +243,6 @@
 
     <!-- Sidebar Controls -->
     <div class="sidebar">
-        <!-- Bookmark Form -->
         <h3 id="form-title"><i class="fa-solid fa-plus-circle"></i> New Bookmark</h3>
         <input type="hidden" id="bm-id">
         <div class="input-group">
@@ -242,10 +251,17 @@
         <div class="input-group">
             <input type="text" id="bm-url" placeholder="URL (e.g., https://google.com)">
         </div>
+        
+        <!-- Category & NEW Subcategory Field -->
         <div class="input-group">
-            <input type="text" id="bm-category" list="cat-list" placeholder="Category (e.g., Work, Social)">
+            <input type="text" id="bm-category" list="cat-list" placeholder="Category (e.g., Network, HMSI)">
             <datalist id="cat-list"></datalist>
         </div>
+        <div class="input-group">
+            <input type="text" id="bm-subcategory" list="subcat-list" placeholder="Sub-Category (e.g., Sheets, Forms) - Optional">
+            <datalist id="subcat-list"></datalist>
+        </div>
+        
         <div class="input-group">
             <select id="bm-priority">
                 <option value="None">Priority: None</option>
@@ -264,7 +280,7 @@
 
         <hr style="margin:20px 0; border:0; border-top:1px solid #ddd;">
         
-        <!-- User Settings / Theme Preferences -->
+        <!-- User Settings -->
         <h4><i class="fa-solid fa-palette"></i> Customize View</h4>
         <div class="control-group">
             <label>Card Size</label>
@@ -310,13 +326,20 @@
 
     let currentUser = null;
     let bookmarks = [];
-    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1' };
-    let activeFilter = 'All';
+    // Drag and drop ka order save karne ke liye nayi properties add ki hain
+    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1', categoryOrder: [], subCategoryOrder: {} };
+    
+    // Filter States
+    let activeFilter = 'All'; // Main Category Filter
+    let activeSubFilter = 'All'; // Sub Category Filter
+    
     let isFetchingEmail = false;
     
     // Icon Library List
     const commonIcons = [
         "fa-brands fa-google", "fa-brands fa-youtube", "fa-brands fa-whatsapp", "fa-brands fa-instagram", "fa-brands fa-linkedin", "fa-brands fa-github",
+        "fa-solid fa-file-excel", "fa-solid fa-table", "fa-solid fa-clipboard-list", "fa-solid fa-square-check", "fa-solid fa-pen-to-square", 
+        "fa-solid fa-book-open", "fa-solid fa-calculator", "fa-solid fa-window-maximize", "fa-solid fa-laptop-code", "fa-solid fa-layer-group",
         "fa-solid fa-house", "fa-solid fa-envelope", "fa-solid fa-briefcase", "fa-solid fa-code", "fa-solid fa-globe", "fa-solid fa-cart-shopping",
         "fa-solid fa-music", "fa-solid fa-video", "fa-solid fa-image", "fa-solid fa-book", "fa-solid fa-calendar", "fa-solid fa-chart-line"
     ];
@@ -327,31 +350,26 @@
     };
 
     // --- UTILITIES & SANITIZATION ---
-    // Enforce strictly 10 numeric digits for mobile
     function limitMobile(el) {
-        el.value = el.value.replace(/[^0-9]/g, ''); // Remove non-numeric chars
+        el.value = el.value.replace(/[^0-9]/g, '');
         if (el.value.length > 10) el.value = el.value.slice(0, 10);
     }
     
-    // Enforce strictly 6 numeric digits for PINs and OTPs
     function limitPin(el) {
-        el.value = el.value.replace(/[^0-9]/g, ''); // Remove non-numeric chars
+        el.value = el.value.replace(/[^0-9]/g, '');
         if (el.value.length > 6) el.value = el.value.slice(0, 6);
     }
     
-    // Validate if PIN/OTP is exactly 6 digits
     function isValidPin(pin) {
         return /^\d{6}$/.test(pin);
     }
 
-    // Toggle loader screen
     function toggleLoader(show, text) { 
         const loaderObj = document.getElementById('loader');
         loaderObj.style.display = show ? 'flex' : 'none'; 
         if(text) document.getElementById('loader-text').innerText = text; 
     }
 
-    // Toggle authentication forms
     function toggleAuth(screen) { 
         document.querySelectorAll('.auth-card').forEach(c => c.classList.add('hidden'));
         if(screen === 'login') document.getElementById('login-form').classList.remove('hidden');
@@ -362,11 +380,10 @@
             document.getElementById('reset-email').value = '';
             document.getElementById('reset-otp').value = '';
             document.getElementById('reset-new-pin').value = '';
-            autoFetchEmail(); // Resets the button UI state
+            autoFetchEmail();
         }
     }
 
-    // --- NEW: AUTO-FETCH EMAIL LOGIC ---
     function autoFetchEmail() {
         const mobile = document.getElementById('reset-mobile').value;
         const emailInput = document.getElementById('reset-email');
@@ -407,7 +424,6 @@
         }
     }
 
-    // --- APP INITIALIZATION & SECURITY ---
     function initApp() {
         const session = localStorage.getItem('user_session_final');
         if (session) {
@@ -438,7 +454,6 @@
         }
     }
 
-    // --- DATA MANAGEMENT ---
     function loadUserData(jsonString) {
         let parsed = JSON.parse(jsonString || "[]");
         
@@ -475,17 +490,10 @@
 
     function syncToCloud() {
         if(!currentUser) return;
-        
         const payload = { settings: userSettings, items: bookmarks };
-        
         fetch(SCRIPT_URL, {
             method: 'POST',
-            body: JSON.stringify({ 
-                action: "sync", 
-                mobile: currentUser.mobile, 
-                pin: currentUser.pin, 
-                bookmarks: JSON.stringify(payload) 
-            })
+            body: JSON.stringify({ action: "sync", mobile: currentUser.mobile, pin: currentUser.pin, bookmarks: JSON.stringify(payload) })
         });
     }
 
@@ -495,6 +503,7 @@
         const title = document.getElementById('bm-title').value.trim();
         const url = document.getElementById('bm-url').value.trim();
         const category = document.getElementById('bm-category').value.trim() || 'General';
+        const subcategory = document.getElementById('bm-subcategory').value.trim() || ''; // New Field
         const priority = document.getElementById('bm-priority').value;
         const icon = document.getElementById('bm-icon').value || 'fa-solid fa-link';
 
@@ -507,9 +516,9 @@
 
         if (id) {
             const idx = bookmarks.findIndex(b => b.id == id);
-            if(idx !== -1) bookmarks[idx] = { id: parseInt(id), title, url: finalUrl, category, priority, icon };
+            if(idx !== -1) bookmarks[idx] = { id: parseInt(id), title, url: finalUrl, category, subcategory, priority, icon };
         } else {
-            bookmarks.push({ id: Date.now(), title, url: finalUrl, category, priority, icon });
+            bookmarks.push({ id: Date.now(), title, url: finalUrl, category, subcategory, priority, icon });
         }
         
         resetForm();
@@ -527,6 +536,7 @@
         document.getElementById('bm-title').value = bm.title;
         document.getElementById('bm-url').value = bm.url;
         document.getElementById('bm-category').value = bm.category;
+        document.getElementById('bm-subcategory').value = bm.subcategory || ''; // Populate new field
         document.getElementById('bm-priority').value = bm.priority;
         document.getElementById('bm-icon').value = bm.icon;
         
@@ -541,6 +551,7 @@
         document.getElementById('bm-id').value = '';
         document.getElementById('bm-title').value = '';
         document.getElementById('bm-url').value = '';
+        document.getElementById('bm-subcategory').value = ''; // Clear new field
         document.getElementById('save-btn').innerText = 'Add Bookmark';
         document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-plus-circle"></i> New Bookmark';
         document.getElementById('cancel-btn').style.display = 'none';
@@ -571,19 +582,43 @@
 
     function setCategoryFilter(cat) {
         activeFilter = cat;
+        activeSubFilter = 'All'; // Reset sub-filter when main category changes
+        renderBookmarks();
+    }
+    
+    function setSubCategoryFilter(subCat) {
+        activeSubFilter = subCat;
         renderBookmarks();
     }
 
-    // --- RENDERING ENGINE ---
+    // --- RENDERING ENGINE (UPDATED FOR DRAG & DROP) ---
     function renderBookmarks() {
         const container = document.getElementById('bookmarks-target');
         container.innerHTML = '';
         
-        const cats = [...new Set(bookmarks.map(b => b.category))].sort();
+        // 1. Dropdowns ke liye Datalists populate karein
+        let rawCats = [...new Set(bookmarks.map(b => b.category))];
+        
+        // Custom order apply karein categories par
+        if (userSettings.categoryOrder && userSettings.categoryOrder.length > 0) {
+            rawCats.sort((a, b) => {
+                let idxA = userSettings.categoryOrder.indexOf(a);
+                let idxB = userSettings.categoryOrder.indexOf(b);
+                if (idxA === -1) idxA = 999;
+                if (idxB === -1) idxB = 999;
+                return idxA - idxB;
+            });
+        } else {
+            rawCats.sort();
+        }
+        const cats = rawCats;
+
         document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}">`).join('');
+        const globalSubCats = [...new Set(bookmarks.map(b => b.subcategory).filter(Boolean))].sort();
+        document.getElementById('subcat-list').innerHTML = globalSubCats.map(c => `<option value="${c}">`).join('');
 
         if(bookmarks.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding: 50px 0; color:#888;"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom:15px; opacity:0.5;"></i><br>No bookmarks found. Add your first one!</div>';
+            container.innerHTML = '<div style="text-align:center; padding: 50px 0; color:#888;"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom:15px; opacity:0.5;"></i><br>Koi bookmark nahi mila. Apna pehla bookmark jodein!</div>';
             return;
         }
 
@@ -591,35 +626,144 @@
             activeFilter = 'All';
         }
 
+        // 2. Main Category Filter render karein
         const filterDiv = document.createElement('div');
         filterDiv.className = 'category-filter';
         
-        let allBtn = `<button class="filter-btn ${activeFilter === 'All' ? 'active' : ''}" onclick="setCategoryFilter('All')">All</button>`;
+        // 'All' button ko static-btn class di hai taaki ise drag na kiya ja sake
+        let allBtn = `<button class="filter-btn static-btn ${activeFilter === 'All' ? 'active' : ''}" onclick="setCategoryFilter('All')">All</button>`;
         let catBtns = cats.map(c => `<button class="filter-btn ${activeFilter === c ? 'active' : ''}" onclick="setCategoryFilter('${c}')">${c}</button>`).join('');
-        
         filterDiv.innerHTML = allBtn + catBtns;
         container.appendChild(filterDiv);
 
-        let groups = {};
-        bookmarks.forEach(b => { 
-            if(!groups[b.category]) groups[b.category] = []; 
-            groups[b.category].push(b); 
+        // Category Drag and Drop (Sortable)
+        Sortable.create(filterDiv, {
+            animation: 150,
+            filter: '.static-btn', // 'All' button ko drag hone se rokein
+            delay: 200, delayOnTouchOnly: true, // Mobile touch scroll issue fix karne ke liye delay
+            onEnd: function () {
+                const btns = Array.from(filterDiv.querySelectorAll('.filter-btn:not(.static-btn)'));
+                userSettings.categoryOrder = btns.map(b => b.innerText);
+                syncToCloud();
+            }
         });
 
-        Object.keys(groups).sort().forEach(cat => {
-            if(activeFilter !== 'All' && activeFilter !== cat) return;
+        let displayItems = bookmarks;
+        let hasSubcats = false;
 
+        // 3. Sub-Category Filter render karein (Agar specific category mein hain)
+        if (activeFilter !== 'All') {
+            displayItems = bookmarks.filter(b => b.category === activeFilter);
+            
+            let subCatsInCurrentCat = [...new Set(displayItems.map(b => b.subcategory).filter(Boolean))];
+            
+            // Sub-category order apply karein
+            let subOrder = (userSettings.subCategoryOrder && userSettings.subCategoryOrder[activeFilter]) || [];
+            if (subOrder.length > 0) {
+                subCatsInCurrentCat.sort((a, b) => {
+                    let idxA = subOrder.indexOf(a);
+                    let idxB = subOrder.indexOf(b);
+                    if (idxA === -1) idxA = 999;
+                    if (idxB === -1) idxB = 999;
+                    return idxA - idxB;
+                });
+            } else {
+                subCatsInCurrentCat.sort();
+            }
+
+            hasSubcats = subCatsInCurrentCat.length > 0;
+            
+            if (hasSubcats) {
+                const subFilterDiv = document.createElement('div');
+                subFilterDiv.className = 'subcategory-filter';
+                
+                let allSubBtn = `<button class="sub-filter-btn static-btn ${activeSubFilter === 'All' ? 'active' : ''}" onclick="setSubCategoryFilter('All')">All</button>`;
+                let subCatBtns = subCatsInCurrentCat.map(c => `<button class="sub-filter-btn ${activeSubFilter === c ? 'active' : ''}" onclick="setSubCategoryFilter('${c}')">${c}</button>`).join('');
+                
+                subFilterDiv.innerHTML = allSubBtn + subCatBtns;
+                container.appendChild(subFilterDiv);
+
+                // Subcategory Drag and Drop (Sortable)
+                Sortable.create(subFilterDiv, {
+                    animation: 150,
+                    filter: '.static-btn',
+                    delay: 200, delayOnTouchOnly: true,
+                    onEnd: function () {
+                        const btns = Array.from(subFilterDiv.querySelectorAll('.sub-filter-btn:not(.static-btn)'));
+                        if(!userSettings.subCategoryOrder) userSettings.subCategoryOrder = {};
+                        userSettings.subCategoryOrder[activeFilter] = btns.map(b => b.innerText);
+                        syncToCloud();
+                    }
+                });
+            } else {
+                activeSubFilter = 'All'; // Force reset if no subcategories
+            }
+
+            // Apply Sub-Category Filter
+            if (activeSubFilter !== 'All') {
+                displayItems = displayItems.filter(b => b.subcategory === activeSubFilter);
+            }
+        } else {
+            activeSubFilter = 'All'; // Always 'All' when viewing all categories
+        }
+
+        // Bookmarks ko unke custom order ke hisaab se sort karein
+        displayItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        // 4. Grouping Logic
+        let groups = {};
+        displayItems.forEach(b => { 
+            let groupKey = 'General';
+            if (activeFilter === 'All') {
+                // When viewing everything, group by Main Category
+                groupKey = b.category || 'General'; 
+            } else {
+                if (hasSubcats) {
+                    // Agar subcategory hai, toh blank walo ko 'Default' mein daalo
+                    groupKey = b.subcategory ? b.subcategory : 'Default'; 
+                } else {
+                    // Agar koi subcategory nahi hai, toh purana style
+                    groupKey = activeFilter; 
+                }
+            }
+
+            if(!groups[groupKey]) groups[groupKey] = []; 
+            groups[groupKey].push(b); 
+        });
+
+        // 5. Render Groups aur Cards
+        // 'Default' ko hamesha list ke end mein rakhein
+        let sortedKeys = Object.keys(groups).sort((a, b) => {
+            if (a === 'Default') return 1;
+            if (b === 'Default') return -1;
+            
+            // Agar view 'All' nahi hai toh group names subcategories hain, unhe subOrder se sort karein
+            if (activeFilter !== 'All' && hasSubcats) {
+                let subOrder = (userSettings.subCategoryOrder && userSettings.subCategoryOrder[activeFilter]) || [];
+                let idxA = subOrder.indexOf(a);
+                let idxB = subOrder.indexOf(b);
+                if (idxA === -1) idxA = 999;
+                if (idxB === -1) idxB = 999;
+                if(idxA !== idxB) return idxA - idxB;
+            }
+            return a.localeCompare(b);
+        });
+
+        sortedKeys.forEach(groupName => {
+            // Header
             const header = document.createElement('div');
             header.className = 'section-title'; 
-            header.innerText = cat;
+            header.innerText = groupName;
             container.appendChild(header);
 
+            // Container
             const wrapper = document.createElement('div');
             wrapper.className = `bookmarks-container ${userSettings.layout === 'list' ? 'view-list' : 'view-grid'}`;
             
-            groups[cat].forEach(b => {
+            groups[groupName].forEach(b => {
                 const card = document.createElement('div');
-                card.className = 'b-card';
+                card.className = 'b-card cursor-grab';
+                card.setAttribute('data-id', b.id); // Reordering ke liye ID zaroori hai
                 card.onclick = (e) => { 
                     if(!e.target.closest('.action-btn')) window.open(b.url, '_blank'); 
                 };
@@ -648,6 +792,22 @@
                 wrapper.appendChild(card);
             });
             container.appendChild(wrapper);
+
+            // Cards Drag and Drop (Sortable)
+            Sortable.create(wrapper, {
+                animation: 150,
+                ghostClass: 'sortable-ghost', // Drag karte waqt card ka visual style
+                delay: 200, delayOnTouchOnly: true, // Mobile touch scroll fix
+                onEnd: function () {
+                    const cards = Array.from(wrapper.querySelectorAll('.b-card'));
+                    cards.forEach((card, index) => {
+                        const id = card.getAttribute('data-id');
+                        const bm = bookmarks.find(b => b.id == parseInt(id));
+                        if (bm) bm.order = index; // Naya order save karein
+                    });
+                    syncToCloud();
+                }
+            });
         });
     }
 
@@ -786,9 +946,9 @@
         }
     }
     
-    // Auto-populate icons on load
     function populateIcons() {
         const grid = document.getElementById('icon-selector');
+        grid.innerHTML = ''; 
         commonIcons.forEach(iconClass => {
             const div = document.createElement('div'); 
             div.className = 'icon-option'; 
