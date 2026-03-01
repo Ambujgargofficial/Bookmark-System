@@ -33,7 +33,7 @@
 
         /* --- AUTH SCREEN --- */
         #auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; display: none; }
-        .auth-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; transition: background 0.3s; }
+        .auth-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; transition: all 0.3s; }
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; transition: color 0.3s;}
         
@@ -41,7 +41,7 @@
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
-        .input-group input, .control-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; transition: background 0.3s, color 0.3s, border-color 0.3s; }
+        .input-group input, .control-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; transition: all 0.3s; }
         .input-group input:disabled { background-color: #f1f5f9; cursor: not-allowed; color: #64748b; }
         
         .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 1em; font-family: inherit; }
@@ -51,7 +51,7 @@
         .toggle-link { margin-top: 15px; cursor: pointer; color: var(--primary); text-decoration: underline; display: block; font-size: 0.9em; }
         
         /* Support Box for PIN Reset */
-        .support-box { margin-top: 20px; padding: 15px; background: #eff6ff; border: 1px dashed var(--primary); border-radius: 8px; font-size: 0.9em; color: #1e40af; text-align: center; transition: background 0.3s, color 0.3s; }
+        .support-box { margin-top: 20px; padding: 15px; background: #eff6ff; border: 1px dashed var(--primary); border-radius: 8px; font-size: 0.9em; color: #1e40af; text-align: center; transition: all 0.3s; }
         .support-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .support-btn:hover { background: #128c7e; transform: scale(1.05); }
 
@@ -60,11 +60,12 @@
         #app-container.with-sidebar { grid-template-columns: 320px 1fr; }
         @media (max-width: 768px) { #app-container.with-sidebar { grid-template-columns: 1fr; } }
         
-        .sidebar { background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; display: none; transition: background 0.3s; }
+        .sidebar { background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; display: none; transition: all 0.3s; }
         #app-container.with-sidebar .sidebar { display: block; }
-        .main-area { background: #e2e8f0; padding: 15px; border-radius: var(--radius); min-height: 80vh; transition: background 0.3s; }
+        .main-area { background: #e2e8f0; padding: 15px; border-radius: var(--radius); min-height: 80vh; transition: all 0.3s; }
         
-        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.3s; }
+        /* z-index 50 added to user-header to ensure dropdown always stays on top of cards regardless of theme */
+        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.3s; position: relative; z-index: 50; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: inherit;}
 
         /* --- BOOKMARK CARDS AND FILTERS --- */
@@ -74,7 +75,7 @@
         /* Main Category Filter Styles */
         .category-filter { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 5px; scrollbar-width: none; -ms-overflow-style: none; }
         .category-filter::-webkit-scrollbar { display: none; }
-        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em; font-family: inherit;}
+        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: var(--white); cursor: pointer; white-space: nowrap; transition: all 0.2s; font-weight: 600; color: var(--text); font-size: 0.9em; font-family: inherit;}
         .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
@@ -82,7 +83,7 @@
         .subcategory-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; border-bottom: 1px dashed #cbd5e1; align-items: center; transition: border-color 0.3s; }
         .subcategory-filter::before { content: "Sub-Categories:"; font-size: 0.8em; font-weight: bold; color: #64748b; padding-right: 5px; }
         .subcategory-filter::-webkit-scrollbar { display: none; }
-        .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: 0.2s; color: #475569; white-space: nowrap; font-weight: 600; font-family: inherit;}
+        .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: all 0.2s; color: #475569; white-space: nowrap; font-weight: 600; font-family: inherit;}
         .sub-filter-btn:hover { border-color: var(--primary); color: var(--primary); background: #e0f2fe; }
         .sub-filter-btn.active { background: #bae6fd; color: #0369a1; border-color: #38bdf8; }
 
@@ -91,7 +92,7 @@
         .view-grid .b-card { 
             background: var(--white); width: var(--card-size); height: var(--card-size); border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; text-decoration: none; color: var(--text); 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: all 0.2s;
         }
         .view-grid .b-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         .view-grid .b-icon { font-size: var(--icon-size); margin-bottom: 8px; color: var(--primary); transition: 0.2s; }
@@ -105,7 +106,7 @@
         .view-list .b-card {
             background: var(--white); width: 100%; padding: 10px 15px; border-radius: 8px; display: flex; 
             align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box; transition: background 0.3s, color 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box; transition: all 0.3s;
         }
         .view-list .card-content { display: flex; align-items: center; gap: 15px; }
         .view-list .b-icon { font-size: 1.5em; color: var(--primary); width: 30px; text-align: center; }
@@ -155,7 +156,9 @@
         #theme-dropdown::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         #theme-dropdown::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* --- DARK MODE OVERRIDES --- */
+        /* =======================================================
+           DARK MODE & SCIFI THEMES OVERRIDES (STRUCTURAL CHANGES)
+           ======================================================= */
         body.dark-mode { --bg: #0f172a; --white: #1e293b; --text: #f1f5f9; }
         body.dark-mode .main-area { background: #020617; }
         body.dark-mode .input-group input, body.dark-mode .control-group select { background: #334155; color: #f1f5f9; border-color: #475569; }
@@ -182,7 +185,121 @@
         body.dark-mode .theme-btn:hover { background: #334155; }
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb { background: #475569; }
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        /* 1. ALIEN XENOMORPH THEME (Organic, Asymmetrical, Toxic) */
+        body[data-theme="alien"] { --bg: #050f05; --white: #0a1f0a; --text: #a3e635; }
+        body[data-theme="alien"] .main-area, body[data-theme="alien"] .sidebar, body[data-theme="alien"] .user-header, body[data-theme="alien"] .auth-card { background: #0a1f0a; border: 1px solid #22c55e; border-radius: 30px 5px 30px 5px; }
+        body[data-theme="alien"] .b-card { border-radius: 30px 5px 30px 5px; border: 1px solid #a3e635; background: #052e16; color: #a3e635; }
+        body[data-theme="alien"] .b-card:hover { box-shadow: 0 0 20px rgba(163, 230, 53, 0.6); transform: scale(1.05); }
+        body[data-theme="alien"] .filter-btn, body[data-theme="alien"] .sub-filter-btn { border-radius: 20px 5px; border-color: #a3e635; background: #052e16; color: #a3e635; }
+        body[data-theme="alien"] .filter-btn.active, body[data-theme="alien"] .sub-filter-btn.active { background: #a3e635; color: #000; box-shadow: 0 0 10px #a3e635; }
+        body[data-theme="alien"] .input-group input, body[data-theme="alien"] .control-group select { background: #052e16; color: #a3e635; border: 1px dashed #a3e635; border-radius: 15px 3px 15px 3px;}
+
+        /* 2. MECHA CHROME THEME (Industrial, Sharp angles, Armor plating) */
+        body[data-theme="mecha"] { --bg: #0f172a; --white: #1e293b; --text: #e2e8f0; --radius: 0px; }
+        body[data-theme="mecha"] .main-area, body[data-theme="mecha"] .sidebar, body[data-theme="mecha"] .user-header, body[data-theme="mecha"] .auth-card { border-radius: 0; border: 2px solid #475569; background: #1e293b; box-shadow: 8px 8px 0px #0f172a, inset 2px 2px 0px #64748b; }
+        body[data-theme="mecha"] .b-card { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); background: #334155; border-left: 4px solid #94a3b8; border-radius: 0; box-shadow: none; }
+        body[data-theme="mecha"] .b-card:hover { background: #475569; transform: translateY(-3px); }
+        body[data-theme="mecha"] .filter-btn, body[data-theme="mecha"] .sub-filter-btn { border-radius: 0; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); background: #334155; color: #cbd5e1; border: none; margin-right: 2px; }
+        body[data-theme="mecha"] .filter-btn.active, body[data-theme="mecha"] .sub-filter-btn.active { background: #94a3b8; color: #0f172a; }
+        body[data-theme="mecha"] .input-group input, body[data-theme="mecha"] .control-group select { background: #0f172a; color: #e2e8f0; border: 1px solid #64748b; border-radius: 0; }
+
+        /* 3. CYBORG PLASMA THEME (Glassmorphism, Neon glow) */
+        body[data-theme="cyborg"] { --bg: #000000; --white: #0a0a0a; --text: #06b6d4; }
+        body[data-theme="cyborg"] .main-area, body[data-theme="cyborg"] .sidebar, body[data-theme="cyborg"] .user-header, body[data-theme="cyborg"] .auth-card { background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.3); backdrop-filter: blur(10px); }
+        body[data-theme="cyborg"] .b-card { border-radius: 15px; border: 1px solid #06b6d4; background: linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(0,0,0,1) 100%); box-shadow: inset 0 0 5px rgba(6,182,212,0.5); }
+        body[data-theme="cyborg"] .b-card:hover { box-shadow: inset 0 0 15px #06b6d4, 0 0 20px rgba(6,182,212,0.6); }
+        body[data-theme="cyborg"] .filter-btn, body[data-theme="cyborg"] .sub-filter-btn { border-radius: 50px; border-color: #06b6d4; background: #000; color: #06b6d4; }
+        body[data-theme="cyborg"] .filter-btn.active, body[data-theme="cyborg"] .sub-filter-btn.active { background: #06b6d4; color: #000; box-shadow: 0 0 15px #06b6d4; }
+        body[data-theme="cyborg"] .input-group input, body[data-theme="cyborg"] .control-group select { background: rgba(0,0,0,0.5); color: #06b6d4; border: 1px solid #06b6d4; }
+
+        /* 4. QUANTUM CORE THEME (Hexagonal / Cyber / Cut-out style) */
+        body[data-theme="quantum"] { --bg: #09090b; --white: #18181b; --text: #fbbf24; }
+        body[data-theme="quantum"] .main-area, body[data-theme="quantum"] .sidebar, body[data-theme="quantum"] .auth-card { background: #18181b; border: none; box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+        body[data-theme="quantum"] .user-header { border-radius: 0; border: 1px solid #3f3f46; background: #18181b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        body[data-theme="quantum"] .b-card { background: #27272a; border-radius: 0; border-top: 2px solid #fbbf24; border-bottom: 2px solid #f59e0b; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+        body[data-theme="quantum"] .b-card:hover { transform: translateY(-4px); background: #3f3f46; }
+        body[data-theme="quantum"] .filter-btn, body[data-theme="quantum"] .sub-filter-btn { border-radius: 0; background: #27272a; color: #a1a1aa; border: 1px solid #52525b; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+        body[data-theme="quantum"] .filter-btn.active, body[data-theme="quantum"] .sub-filter-btn.active { background: #f59e0b; color: #000; border-color: #f59e0b; font-weight: bold; }
+        body[data-theme="quantum"] .input-group input, body[data-theme="quantum"] .control-group select { background: #09090b; color: #fbbf24; border: 1px solid #52525b; border-radius: 0; }
+
+        /* 5. LUNAR ECLIPSE THEME (Floating, Dashed borders, Glowing pill shapes) */
+        body[data-theme="lunar"] { --bg: #000000; --white: #0a0a0a; --text: #e879f9; }
+        body[data-theme="lunar"] .main-area, body[data-theme="lunar"] .sidebar, body[data-theme="lunar"] .user-header, body[data-theme="lunar"] .auth-card { background: #0a0a0a; border: 1px solid #701a75; border-radius: 40px; box-shadow: inset 0 0 20px rgba(217, 70, 239, 0.05); }
+        body[data-theme="lunar"] .b-card { background: transparent; border-radius: 25px; border: 2px dashed #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.1); }
+        body[data-theme="lunar"] .b-card:hover { background: rgba(217, 70, 239, 0.1); transform: rotate(2deg) scale(1.05); box-shadow: 0 0 20px rgba(217, 70, 239, 0.4); border-style: solid; }
+        body[data-theme="lunar"] .filter-btn, body[data-theme="lunar"] .sub-filter-btn { border-radius: 30px; background: #000; border: 1px solid #86198f; color: #e879f9; }
+        body[data-theme="lunar"] .filter-btn.active, body[data-theme="lunar"] .sub-filter-btn.active { background: #d946ef; color: #fff; box-shadow: 0 0 15px #d946ef; border: none; }
+        body[data-theme="lunar"] .input-group input, body[data-theme="lunar"] .control-group select { background: #000; color: #e879f9; border: 1px dashed #701a75; border-radius: 20px; }
+
+        /* =======================================================
+           HOLLYWOOD SCI-FI / FUTURISTIC THEMES WITH BACKGROUNDS
+           ======================================================= */
         
+        /* 6. TRON GRID (Matrix/Cyber Grid Background) */
+        body[data-theme="cybergrid"] { 
+            --bg: #000000; --white: #0a0a0a; --text: #00ff00; 
+            background-color: #000000;
+            background-image: linear-gradient(rgba(0, 255, 0, 0.2) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 0, 0.2) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-attachment: fixed;
+        }
+        body[data-theme="cybergrid"] .main-area, body[data-theme="cybergrid"] .sidebar, body[data-theme="cybergrid"] .user-header, body[data-theme="cybergrid"] .auth-card { background: rgba(0, 10, 0, 0.85); border: 1px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); backdrop-filter: blur(5px); border-radius: 0; }
+        body[data-theme="cybergrid"] .b-card { background: rgba(0, 20, 0, 0.9); border: 1px solid #00ff00; color: #00ff00; border-radius: 0; }
+        body[data-theme="cybergrid"] .b-card:hover { background: #00ff00; color: #000; box-shadow: 0 0 20px #00ff00; transform: scale(1.05); }
+        body[data-theme="cybergrid"] .filter-btn, body[data-theme="cybergrid"] .sub-filter-btn { border-radius: 0; border: 1px solid #00ff00; background: transparent; color: #00ff00; }
+        body[data-theme="cybergrid"] .filter-btn.active, body[data-theme="cybergrid"] .sub-filter-btn.active { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
+        body[data-theme="cybergrid"] .input-group input, body[data-theme="cybergrid"] .control-group select { background: #000; color: #00ff00; border: 1px solid #00ff00; border-radius: 0; }
+
+        /* 7. HOLO HUD (Iron Man / Holographic Interface) */
+        body[data-theme="holohud"] { 
+            --bg: #000a14; --white: rgba(0,20,40,0.6); --text: #00eeff; 
+            background: radial-gradient(circle at center, #001a33 0%, #000000 100%);
+            background-attachment: fixed;
+        }
+        body[data-theme="holohud"] .main-area, body[data-theme="holohud"] .sidebar, body[data-theme="holohud"] .user-header, body[data-theme="holohud"] .auth-card { background: rgba(0, 30, 60, 0.4); border: 1px solid rgba(0, 238, 255, 0.3); border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        body[data-theme="holohud"] .b-card { background: rgba(0, 40, 80, 0.5); border: 1px solid #00eeff; border-radius: 8px; color: #00eeff; }
+        body[data-theme="holohud"] .b-card:hover { background: rgba(0, 238, 255, 0.2); box-shadow: inset 0 0 20px rgba(0, 238, 255, 0.5), 0 0 20px rgba(0, 238, 255, 0.5); }
+        body[data-theme="holohud"] .filter-btn, body[data-theme="holohud"] .sub-filter-btn { border-radius: 8px; border: 1px solid #00eeff; background: rgba(0, 40, 80, 0.5); color: #00eeff; }
+        body[data-theme="holohud"] .filter-btn.active, body[data-theme="holohud"] .sub-filter-btn.active { background: rgba(0, 238, 255, 0.8); color: #000; box-shadow: 0 0 15px #00eeff; }
+        body[data-theme="holohud"] .input-group input, body[data-theme="holohud"] .control-group select { background: rgba(0, 20, 40, 0.8); color: #00eeff; border: 1px solid #00eeff; }
+
+        /* 8. XENO PLANET (Alien Wallpaper Background) */
+        body[data-theme="xenoplanet"] { 
+            --bg: #000000; --white: rgba(5, 15, 10, 0.7); --text: #34d399; 
+            background-color: #000;
+            background-image: url('https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=2560&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        body[data-theme="xenoplanet"] .main-area, body[data-theme="xenoplanet"] .sidebar, body[data-theme="xenoplanet"] .user-header, body[data-theme="xenoplanet"] .auth-card { background: rgba(5, 20, 10, 0.6); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 15px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
+        body[data-theme="xenoplanet"] .b-card { background: rgba(0, 0, 0, 0.5); border: 1px solid #059669; color: #34d399; border-radius: 10px; backdrop-filter: blur(5px); }
+        body[data-theme="xenoplanet"] .b-card:hover { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; box-shadow: 0 0 20px rgba(52, 211, 153, 0.6); border-color: #34d399; transform: translateY(-5px) scale(1.02); }
+        body[data-theme="xenoplanet"] .filter-btn, body[data-theme="xenoplanet"] .sub-filter-btn { border-radius: 8px; border: 1px solid #059669; background: rgba(0, 0, 0, 0.5); color: #34d399; }
+        body[data-theme="xenoplanet"] .filter-btn.active, body[data-theme="xenoplanet"] .sub-filter-btn.active { background: #059669; color: #fff; border-color: #34d399; box-shadow: 0 0 15px #34d399; }
+        body[data-theme="xenoplanet"] .input-group input, body[data-theme="xenoplanet"] .control-group select { background: rgba(0, 0, 0, 0.5); color: #34d399; border: 1px solid #059669; border-radius: 8px; }
+
+        /* 9. STAR COMMAND (Deep Space / Spaceship Console) */
+        body[data-theme="spacecmd"] { 
+            --bg: #050508; --white: rgba(20,20,30,0.8); --text: #e2e8f0; 
+            background-color: #050508;
+            background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+                              radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+                              radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px),
+                              radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+            background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+            background-attachment: fixed;
+        }
+        body[data-theme="spacecmd"] .main-area, body[data-theme="spacecmd"] .sidebar, body[data-theme="spacecmd"] .user-header, body[data-theme="spacecmd"] .auth-card { background: rgba(15, 15, 20, 0.85); border: 1px solid #334; border-radius: 20px; backdrop-filter: blur(8px); }
+        body[data-theme="spacecmd"] .b-card { background: linear-gradient(180deg, #1a1a24 0%, #0a0a0f 100%); border: 1px solid #445; border-radius: 15px; color: #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+        body[data-theme="spacecmd"] .b-card:hover { border-color: #cbd5e1; box-shadow: 0 0 15px rgba(255,255,255,0.2); transform: translateY(-5px); }
+        body[data-theme="spacecmd"] .filter-btn, body[data-theme="spacecmd"] .sub-filter-btn { border-radius: 15px; background: #1a1a24; border: 1px solid #445; color: #94a3b8; }
+        body[data-theme="spacecmd"] .filter-btn.active, body[data-theme="spacecmd"] .sub-filter-btn.active { background: #e2e8f0; color: #0f0f14; border-color: #e2e8f0; }
+        body[data-theme="spacecmd"] .input-group input, body[data-theme="spacecmd"] .control-group select { background: #0a0a0f; color: #e2e8f0; border: 1px solid #445; }
+
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
             .user-header .welcome-msg { display: none; } /* Hide welcome msg on mobile to save space */
@@ -426,7 +543,7 @@
     let activeSubFilter = 'All'; // Sub Category Filter
     let isFetchingEmail = false;
 
-    // Stylish, Professional, GenZ, and Robotic Theme Presets
+    // Stylish, Professional, GenZ, and Sci-Fi Theme Presets
     const themePresets = {
         'default': { name: 'Default Blue', color: '#2563eb', font: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" },
         'modern': { name: 'Modern Cyan', color: '#0ea5e9', font: "'Trebuchet MS', 'Lucida Sans Unicode', sans-serif" },
@@ -435,19 +552,25 @@
         'forest': { name: 'Forest Green', color: '#16a34a', font: "'Verdana', sans-serif" },
         'royal': { name: 'Royal Purple', color: '#9333ea', font: "'Palatino Linotype', 'Book Antiqua', Palatino, serif" },
         'rose': { name: 'Rose Red', color: '#e11d48', font: "Tahoma, sans-serif" },
-        'cyber': { name: 'Retro Green', color: '#059669', font: "'Courier New', Courier, monospace" },
         
-        // --- NEW GenZ & Cybernetic Themes ---
-        'matrix': { name: 'Matrix Terminal', color: '#10b981', font: "'Consolas', 'Fira Code', monospace" },
-        'neon': { name: 'Neon Cyberpunk', color: '#f43f5e', font: "'Impact', sans-serif" },
-        'synthwave': { name: 'Synthwave Indigo', color: '#8b5cf6', font: "'Lucida Console', Monaco, monospace" },
-        'dracula': { name: 'Vampire Crimson', color: '#be123c', font: "'Trebuchet MS', sans-serif" },
-        'monochrome': { name: 'Stealth Black', color: '#171717', font: "'Arial Black', sans-serif" },
+        // --- GenZ Themes ---
         'oceanic': { name: 'Deep Oceanic', color: '#0f766e', font: "Century Gothic, sans-serif" },
         'genz': { name: 'GenZ Pastel', color: '#a855f7', font: "'Comic Sans MS', cursive, sans-serif" },
         'toxic': { name: 'Toxic Yellow', color: '#eab308', font: "'Courier New', Courier, monospace" },
         'glitch': { name: 'Glitch Violet', color: '#4f46e5', font: "'Franklin Gothic Medium', sans-serif" },
-        'hologram': { name: 'Hologram Teal', color: '#14b8a6', font: "'Courier', monospace" }
+
+        // --- Robotic & Structural Themes ---
+        'alien': { name: 'Alien Xenomorph', color: '#a3e635', font: "'Courier New', Courier, monospace" },
+        'mecha': { name: 'Mecha Chrome', color: '#64748b', font: "'Lucida Console', Monaco, monospace" },
+        'cyborg': { name: 'Cyborg Plasma', color: '#06b6d4', font: "'Trebuchet MS', sans-serif" },
+        'quantum': { name: 'Quantum Core', color: '#f59e0b', font: "'Franklin Gothic Medium', sans-serif" },
+        'lunar': { name: 'Lunar Eclipse', color: '#d946ef', font: "'Trebuchet MS', sans-serif" },
+
+        // --- NEW: Hollywood Sci-Fi & Animated Background Themes ---
+        'cybergrid': { name: 'Tron Grid', color: '#00ff00', font: "'Courier New', Courier, monospace" },
+        'holohud': { name: 'Holo HUD', color: '#00eeff', font: "'Trebuchet MS', sans-serif" },
+        'xenoplanet': { name: 'Xeno Planet', color: '#34d399', font: "'Trebuchet MS', sans-serif" },
+        'spacecmd': { name: 'Star Command', color: '#e2e8f0', font: "'Arial Black', sans-serif" }
     };
     
     // Icon Library List
@@ -500,6 +623,7 @@
             userSettings.theme = themePresets[key].color;
             userSettings.fontFamily = themePresets[key].font;
             document.getElementById('pref-color').value = userSettings.theme;
+            document.body.setAttribute('data-theme', key);
             updatePreferences();
         }
         document.getElementById('theme-dropdown').classList.add('hidden');
@@ -625,6 +749,7 @@
 
         // Apply defaults if missing
         if(!userSettings.fontFamily) userSettings.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        if(!userSettings.themeName) userSettings.themeName = 'default';
         
         document.getElementById('pref-layout').value = userSettings.layout;
         document.getElementById('pref-color').value = userSettings.theme;
@@ -639,7 +764,8 @@
         } else {
             document.body.classList.remove('dark-mode');
         }
-        
+
+        document.body.setAttribute('data-theme', userSettings.themeName);
         document.documentElement.style.setProperty('--primary', userSettings.theme);
         document.documentElement.style.setProperty('--font-family', userSettings.fontFamily);
         applySize(userSettings.cardSize);
