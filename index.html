@@ -9,28 +9,28 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; --white: #ffffff; --text: #1e293b; --radius: 12px; --card-size: 140px; --icon-size: 2.5em; --title-size: 0.9em; --list-cols: 1; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
         
         /* --- UTILITIES --- */
         .hidden { display: none !important; }
         
         /* --- LOADER --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: background 0.3s; }
         .spinner { border: 4px solid #cbd5e1; border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loader-text { font-weight: bold; color: var(--primary); }
 
         /* --- AUTH SCREEN --- */
         #auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; display: none; }
-        .auth-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .auth-card { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; transition: background 0.3s; }
         .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9em; transition: color 0.3s;}
         
         /* Restrict spinners on number inputs */
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
-        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; }
+        .input-group input, .control-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1em; transition: background 0.3s, color 0.3s, border-color 0.3s; }
         .input-group input:disabled { background-color: #f1f5f9; cursor: not-allowed; color: #64748b; }
         
         .btn-full { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 1em; }
@@ -40,7 +40,7 @@
         .toggle-link { margin-top: 15px; cursor: pointer; color: var(--primary); text-decoration: underline; display: block; font-size: 0.9em; }
         
         /* Support Box for PIN Reset */
-        .support-box { margin-top: 20px; padding: 15px; background: #eff6ff; border: 1px dashed var(--primary); border-radius: 8px; font-size: 0.9em; color: #1e40af; text-align: center; }
+        .support-box { margin-top: 20px; padding: 15px; background: #eff6ff; border: 1px dashed var(--primary); border-radius: 8px; font-size: 0.9em; color: #1e40af; text-align: center; transition: background 0.3s, color 0.3s; }
         .support-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .support-btn:hover { background: #128c7e; transform: scale(1.05); }
 
@@ -49,15 +49,15 @@
         #app-container.with-sidebar { grid-template-columns: 320px 1fr; }
         @media (max-width: 768px) { #app-container.with-sidebar { grid-template-columns: 1fr; } }
         
-        .sidebar { background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; display: none; }
+        .sidebar { background: var(--white); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; display: none; transition: background 0.3s; }
         #app-container.with-sidebar .sidebar { display: block; }
-        .main-area { background: #e2e8f0; padding: 15px; border-radius: var(--radius); min-height: 80vh; }
+        .main-area { background: #e2e8f0; padding: 15px; border-radius: var(--radius); min-height: 80vh; transition: background 0.3s; }
         
-        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 10px 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.3s; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         /* --- BOOKMARK CARDS & FILTERS --- */
-        .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; text-transform: capitalize; }
+        .section-title { width: 100%; border-bottom: 2px solid var(--primary); margin: 15px 0 10px 0; font-weight: bold; color: var(--text); font-size: 1.1em; padding-bottom: 5px; text-transform: capitalize; transition: color 0.3s; }
         .bookmarks-container { display: flex; gap: 12px; margin-bottom: 20px; }
         
         /* Category Filter Styles (Main) */
@@ -68,7 +68,7 @@
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* Sub-Category Filter Styles */
-        .subcategory-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; border-bottom: 1px dashed #cbd5e1; align-items: center; }
+        .subcategory-filter { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 15px; scrollbar-width: none; border-bottom: 1px dashed #cbd5e1; align-items: center; transition: border-color 0.3s; }
         .subcategory-filter::before { content: "Sub-Categories:"; font-size: 0.8em; font-weight: bold; color: #64748b; padding-right: 5px; }
         .subcategory-filter::-webkit-scrollbar { display: none; }
         .sub-filter-btn { padding: 4px 12px; border-radius: 15px; border: 1px solid #e2e8f0; background: #f1f5f9; cursor: pointer; font-size: 0.85em; transition: 0.2s; color: #475569; white-space: nowrap; font-weight: 600;}
@@ -94,7 +94,7 @@
         .view-list .b-card {
             background: var(--white); width: 100%; padding: 10px 15px; border-radius: 8px; display: flex; 
             align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box; transition: background 0.3s, color 0.3s;
         }
         .view-list .card-content { display: flex; align-items: center; gap: 15px; }
         .view-list .b-icon { font-size: 1.5em; color: var(--primary); width: 30px; text-align: center; }
@@ -113,7 +113,7 @@
         .btn-del { background: #ef4444; color: white; }
         .btn-del:hover { background: #dc2626; }
         
-        .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #eee; padding: 5px; border-radius: 6px; }
+        .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #eee; padding: 5px; border-radius: 6px; transition: border-color 0.3s; }
         .icon-option { text-align: center; padding: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
         .icon-option:hover { background: #f1f5f9; }
         .icon-option.selected { background: var(--primary); color: white; }
@@ -125,6 +125,44 @@
         .sortable-ghost { opacity: 0.4; background: #e2e8f0; border: 2px dashed var(--primary); }
         .cursor-grab { cursor: grab; }
         .cursor-grab:active { cursor: grabbing; }
+
+        /* --- TOGGLE SWITCH CSS --- */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode { --bg: #0f172a; --white: #1e293b; --text: #f1f5f9; }
+        body.dark-mode .main-area { background: #020617; }
+        body.dark-mode .input-group input, body.dark-mode .control-group select { background: #334155; color: #f1f5f9; border-color: #475569; }
+        body.dark-mode .input-group input:disabled { background: #1e293b; color: #94a3b8; border-color: #334155; }
+        body.dark-mode .category-filter .filter-btn { background: #334155; color: #cbd5e1; border-color: #475569; }
+        body.dark-mode .category-filter .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        body.dark-mode .category-filter .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        body.dark-mode .subcategory-filter { border-bottom-color: #334155; }
+        body.dark-mode .subcategory-filter::before { color: #94a3b8; }
+        body.dark-mode .subcategory-filter .sub-filter-btn { background: #0f172a; color: #94a3b8; border-color: #334155; }
+        body.dark-mode .subcategory-filter .sub-filter-btn:hover { border-color: var(--primary); color: var(--primary); background: #1e293b; }
+        body.dark-mode .subcategory-filter .sub-filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        body.dark-mode .icon-option:hover { background: #334155; }
+        body.dark-mode .icon-grid { border-color: #334155; }
+        body.dark-mode hr { border-top-color: #334155 !important; }
+        body.dark-mode .support-box { background: #0f172a; border-color: var(--primary); color: #cbd5e1; }
+        body.dark-mode #reset-step-2 { border-top-color: #475569 !important; }
+        body.dark-mode #reset-step-2 .input-group { background: #0f172a !important; }
+        body.dark-mode #reset-step-2 input { background: #1e293b !important; border-color: var(--primary) !important; }
+        body.dark-mode .sortable-ghost { background: #334155; border-color: var(--primary); }
+        body.dark-mode .theme-divider { border-right-color: #475569 !important; }
+        body.dark-mode #theme-icon, body.dark-mode #theme-text { color: #cbd5e1 !important; }
+        
+        @media (max-width: 600px) {
+            .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
+            .user-header .welcome-msg { display: none; } /* Hide welcome msg on mobile to save space */
+            #theme-text { display: none; } /* Hide the text on very small screens to save space */
+        }
     </style>
 </head>
 <body>
@@ -235,7 +273,18 @@
     
     <div class="user-header" style="grid-column: 1 / -1;">
         <div class="welcome-msg" id="welcome-text"></div>
-        <div style="display: flex; gap: 10px;">
+        
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <!-- Dark Mode Toggle in Header -->
+            <div class="theme-divider" style="display: flex; align-items: center; gap: 8px; margin-right: 5px; border-right: 1px solid #cbd5e1; padding-right: 15px; transition: border-color 0.3s;">
+                <i class="fa-solid fa-moon" id="theme-icon" style="color: #64748b; font-size: 1.1em; transition: color 0.3s;"></i>
+                <span id="theme-text" style="font-size: 0.9em; font-weight: bold; color: #64748b; transition: color 0.3s;">Dark Mode</span>
+                <label class="switch" style="margin: 0;">
+                  <input type="checkbox" id="pref-dark-mode" onchange="updatePreferences()">
+                  <span class="slider"></span>
+                </label>
+            </div>
+            
             <button onclick="toggleSidebar()" style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;"><i class="fa-solid fa-sliders"></i> Manage</button>
             <button class="logout-btn" onclick="doLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
         </div>
@@ -243,7 +292,10 @@
 
     <!-- Sidebar Controls -->
     <div class="sidebar">
-        <h3 id="form-title"><i class="fa-solid fa-plus-circle"></i> New Bookmark</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 id="form-title" style="margin: 0;"><i class="fa-solid fa-plus-circle"></i> New Bookmark</h3>
+            <button onclick="toggleSidebar(false)" style="background: transparent; border: none; color: #ef4444; font-size: 1.5em; cursor: pointer; padding: 0;" title="Close Window"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
         <input type="hidden" id="bm-id">
         <div class="input-group">
             <input type="text" id="bm-title" placeholder="Website Title (e.g., Google)">
@@ -260,15 +312,6 @@
         <div class="input-group">
             <input type="text" id="bm-subcategory" list="subcat-list" placeholder="Sub-Category (e.g., Sheets, Forms) - Optional">
             <datalist id="subcat-list"></datalist>
-        </div>
-        
-        <div class="input-group">
-            <select id="bm-priority">
-                <option value="None">Priority: None</option>
-                <option value="Daily">Daily Use</option>
-                <option value="Weekly">Weekly Use</option>
-                <option value="Monthly">Monthly Use</option>
-            </select>
         </div>
         
         <label style="font-size:0.8em; font-weight:bold; margin-top:5px; display:block;">Select Icon:</label>
@@ -306,9 +349,9 @@
                 <option value="3">3 Items per row</option>
             </select>
         </div>
-        <div class="control-group">
+        <div class="control-group" style="display: flex; flex-direction: column; gap: 5px;">
             <label>Theme Color</label>
-            <input type="color" id="pref-color" onchange="updatePreferences()" style="height:40px; cursor:pointer;">
+            <input type="color" id="pref-color" onchange="updatePreferences()" style="height:40px; cursor:pointer; width: 100%;">
         </div>
     </div>
 
@@ -326,8 +369,8 @@
 
     let currentUser = null;
     let bookmarks = [];
-    // Drag and drop ka order save karne ke liye nayi properties add ki hain
-    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1', categoryOrder: [], subCategoryOrder: {} };
+    // Drag and drop ka order save karne ke liye nayi properties add ki hain, plus darkMode
+    let userSettings = { layout: 'grid', sortBy: 'category', theme: '#2563eb', cardSize: 'md', listCols: '1', categoryOrder: [], subCategoryOrder: {}, darkMode: false };
     
     // Filter States
     let activeFilter = 'All'; // Main Category Filter
@@ -471,6 +514,15 @@
         document.getElementById('pref-size').value = userSettings.cardSize;
         document.getElementById('pref-list-cols').value = userSettings.listCols || '1';
         
+        // Setup Dark Mode toggle based on settings
+        const isDarkMode = userSettings.darkMode || false;
+        document.getElementById('pref-dark-mode').checked = isDarkMode;
+        if(isDarkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+        
         document.documentElement.style.setProperty('--primary', userSettings.theme);
         applySize(userSettings.cardSize);
         applyListColumns(userSettings.listCols || '1');
@@ -504,7 +556,6 @@
         const url = document.getElementById('bm-url').value.trim();
         const category = document.getElementById('bm-category').value.trim() || 'General';
         const subcategory = document.getElementById('bm-subcategory').value.trim() || ''; // New Field
-        const priority = document.getElementById('bm-priority').value;
         const icon = document.getElementById('bm-icon').value || 'fa-solid fa-link';
 
         if(!title || !url) return alert("Title and URL are required fields.");
@@ -516,9 +567,12 @@
 
         if (id) {
             const idx = bookmarks.findIndex(b => b.id == id);
-            if(idx !== -1) bookmarks[idx] = { id: parseInt(id), title, url: finalUrl, category, subcategory, priority, icon };
+            if(idx !== -1) {
+                let oldOrder = bookmarks[idx].order;
+                bookmarks[idx] = { id: parseInt(id), title, url: finalUrl, category, subcategory, icon, order: oldOrder };
+            }
         } else {
-            bookmarks.push({ id: Date.now(), title, url: finalUrl, category, subcategory, priority, icon });
+            bookmarks.push({ id: Date.now(), title, url: finalUrl, category, subcategory, icon });
         }
         
         resetForm();
@@ -537,7 +591,6 @@
         document.getElementById('bm-url').value = bm.url;
         document.getElementById('bm-category').value = bm.category;
         document.getElementById('bm-subcategory').value = bm.subcategory || ''; // Populate new field
-        document.getElementById('bm-priority').value = bm.priority;
         document.getElementById('bm-icon').value = bm.icon;
         
         document.getElementById('save-btn').innerText = 'Update Bookmark';
@@ -571,6 +624,14 @@
         userSettings.theme = document.getElementById('pref-color').value;
         userSettings.cardSize = document.getElementById('pref-size').value;
         userSettings.listCols = document.getElementById('pref-list-cols').value;
+        
+        // Handle Dark Mode State
+        userSettings.darkMode = document.getElementById('pref-dark-mode').checked;
+        if(userSettings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
         
         document.documentElement.style.setProperty('--primary', userSettings.theme);
         applySize(userSettings.cardSize);
