@@ -100,14 +100,17 @@
                 background: var(--white); z-index: 4000; 
                 box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; overflow-y: auto;
                 border-right: 2px solid var(--primary); margin-bottom: 0;
+                backdrop-filter: none !important; /* Force remove blur to prevent mobile glitches */
             }
             #filter-wrapper.open { left: 0; }
             .mobile-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #cbd5e1; }
             .mobile-drawer-header h3 { margin: 0; color: var(--text); }
             .mobile-drawer-header button { background: transparent; border: none; color: #ef4444; font-size: 1.5em; cursor: pointer; padding: 0; }
+            
             #filter-backdrop {
                 display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.6); z-index: 3999; backdrop-filter: blur(3px);
+                background: rgba(0,0,0,0.85); z-index: 3999; 
+                backdrop-filter: none !important; /* Removed blur entirely to fix mobile rendering bug */
             }
             #filter-backdrop.open { display: block; }
             
@@ -116,6 +119,18 @@
             .filter-btn, .sub-filter-btn { text-align: left; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; white-space: normal;}
             .subcategory-filter { border-bottom: none; border-left: 2px dashed #cbd5e1; padding-left: 10px; margin-left: 10px; }
             .subcategory-filter::before { display: block; margin-bottom: 10px; }
+
+            /* Theme-specific solid backgrounds for mobile drawer to prevent transparency bugs */
+            body.dark-mode #filter-wrapper { background: #0f172a !important; }
+            body[data-theme="cyborg"] #filter-wrapper { background: #00151a !important; border-right: 2px solid #06b6d4; }
+            body[data-theme="holohud"] #filter-wrapper { background: #001a33 !important; border-right: 2px solid #00eeff; }
+            body[data-theme="xenoplanet"] #filter-wrapper { background: #05140a !important; border-right: 2px solid #34d399; }
+            body[data-theme="spacecmd"] #filter-wrapper { background: #0a0a0f !important; border-right: 2px solid #e2e8f0; }
+            body[data-theme="cybergrid"] #filter-wrapper { background: #001100 !important; border-right: 2px solid #00ff00; }
+            body[data-theme="lunar"] #filter-wrapper { background: #120012 !important; border-right: 2px dashed #d946ef; }
+            body[data-theme="quantum"] #filter-wrapper { background: #18181b !important; }
+            body[data-theme="mecha"] #filter-wrapper { background: #1e293b !important; }
+            body[data-theme="alien"] #filter-wrapper { background: #0a1f0a !important; }
         }
 
         /* GRID VIEW (Horizontal) */
@@ -217,11 +232,10 @@
         body.dark-mode .theme-btn:hover { background: #334155; }
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb { background: #475569; }
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb:hover { background: #64748b; }
-        body.dark-mode #filter-wrapper { background: #0f172a; border-color: #334155; }
 
         /* 1. ALIEN XENOMORPH THEME (Organic, Asymmetrical, Toxic) */
         body[data-theme="alien"] { --bg: #050f05; --white: #0a1f0a; --text: #a3e635; }
-        body[data-theme="alien"] .main-area, body[data-theme="alien"] .sidebar, body[data-theme="alien"] .user-header, body[data-theme="alien"] .auth-card, body[data-theme="alien"] #filter-wrapper { background: #0a1f0a; border: 1px solid #22c55e; border-radius: 30px 5px 30px 5px; }
+        body[data-theme="alien"] .main-area, body[data-theme="alien"] .sidebar, body[data-theme="alien"] .user-header, body[data-theme="alien"] .auth-card { background: #0a1f0a; border: 1px solid #22c55e; border-radius: 30px 5px 30px 5px; }
         body[data-theme="alien"] .b-card { border-radius: 30px 5px 30px 5px; border: 1px solid #a3e635; background: #052e16; color: #a3e635; }
         body[data-theme="alien"] .b-card:hover { box-shadow: 0 0 20px rgba(163, 230, 53, 0.6); transform: scale(1.05); }
         body[data-theme="alien"] .filter-btn, body[data-theme="alien"] .sub-filter-btn { border-radius: 20px 5px; border-color: #a3e635; background: #052e16; color: #a3e635; }
@@ -230,7 +244,7 @@
 
         /* 2. MECHA CHROME THEME (Industrial, Sharp angles, Armor plating) */
         body[data-theme="mecha"] { --bg: #0f172a; --white: #1e293b; --text: #e2e8f0; --radius: 0px; }
-        body[data-theme="mecha"] .main-area, body[data-theme="mecha"] .sidebar, body[data-theme="mecha"] .user-header, body[data-theme="mecha"] .auth-card, body[data-theme="mecha"] #filter-wrapper { border-radius: 0; border: 2px solid #475569; background: #1e293b; box-shadow: 8px 8px 0px #0f172a, inset 2px 2px 0px #64748b; }
+        body[data-theme="mecha"] .main-area, body[data-theme="mecha"] .sidebar, body[data-theme="mecha"] .user-header, body[data-theme="mecha"] .auth-card { border-radius: 0; border: 2px solid #475569; background: #1e293b; box-shadow: 8px 8px 0px #0f172a, inset 2px 2px 0px #64748b; }
         body[data-theme="mecha"] .b-card { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); background: #334155; border-left: 4px solid #94a3b8; border-radius: 0; box-shadow: none; }
         body[data-theme="mecha"] .b-card:hover { background: #475569; transform: translateY(-3px); }
         body[data-theme="mecha"] .filter-btn, body[data-theme="mecha"] .sub-filter-btn { border-radius: 0; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); background: #334155; color: #cbd5e1; border: none; margin-right: 2px; }
@@ -239,7 +253,7 @@
 
         /* 3. CYBORG PLASMA THEME (Glassmorphism, Neon glow) */
         body[data-theme="cyborg"] { --bg: #000000; --white: #0a0a0a; --text: #06b6d4; }
-        body[data-theme="cyborg"] .main-area, body[data-theme="cyborg"] .sidebar, body[data-theme="cyborg"] .user-header, body[data-theme="cyborg"] .auth-card, body[data-theme="cyborg"] #filter-wrapper { background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.3); backdrop-filter: blur(10px); }
+        body[data-theme="cyborg"] .main-area, body[data-theme="cyborg"] .sidebar, body[data-theme="cyborg"] .user-header, body[data-theme="cyborg"] .auth-card { background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.3); backdrop-filter: blur(10px); }
         body[data-theme="cyborg"] .b-card { border-radius: 15px; border: 1px solid #06b6d4; background: linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(0,0,0,1) 100%); box-shadow: inset 0 0 5px rgba(6,182,212,0.5); }
         body[data-theme="cyborg"] .b-card:hover { box-shadow: inset 0 0 15px #06b6d4, 0 0 20px rgba(6,182,212,0.6); }
         body[data-theme="cyborg"] .filter-btn, body[data-theme="cyborg"] .sub-filter-btn { border-radius: 50px; border-color: #06b6d4; background: #000; color: #06b6d4; }
@@ -248,7 +262,7 @@
 
         /* 4. QUANTUM CORE THEME (Hexagonal / Cyber / Cut-out style) */
         body[data-theme="quantum"] { --bg: #09090b; --white: #18181b; --text: #fbbf24; }
-        body[data-theme="quantum"] .main-area, body[data-theme="quantum"] .sidebar, body[data-theme="quantum"] .auth-card, body[data-theme="quantum"] #filter-wrapper { background: #18181b; border: none; box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+        body[data-theme="quantum"] .main-area, body[data-theme="quantum"] .sidebar, body[data-theme="quantum"] .auth-card { background: #18181b; border: none; box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
         body[data-theme="quantum"] .user-header { border-radius: 0; border: 1px solid #3f3f46; background: #18181b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
         body[data-theme="quantum"] .b-card { background: #27272a; border-radius: 0; border-top: 2px solid #fbbf24; border-bottom: 2px solid #f59e0b; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
         body[data-theme="quantum"] .b-card:hover { transform: translateY(-4px); background: #3f3f46; }
@@ -258,7 +272,7 @@
 
         /* 5. LUNAR ECLIPSE THEME (Floating, Dashed borders, Glowing pill shapes) */
         body[data-theme="lunar"] { --bg: #000000; --white: #0a0a0a; --text: #e879f9; }
-        body[data-theme="lunar"] .main-area, body[data-theme="lunar"] .sidebar, body[data-theme="lunar"] .user-header, body[data-theme="lunar"] .auth-card, body[data-theme="lunar"] #filter-wrapper { background: #0a0a0a; border: 1px solid #701a75; border-radius: 40px; box-shadow: inset 0 0 20px rgba(217, 70, 239, 0.05); }
+        body[data-theme="lunar"] .main-area, body[data-theme="lunar"] .sidebar, body[data-theme="lunar"] .user-header, body[data-theme="lunar"] .auth-card { background: #0a0a0a; border: 1px solid #701a75; border-radius: 40px; box-shadow: inset 0 0 20px rgba(217, 70, 239, 0.05); }
         body[data-theme="lunar"] .b-card { background: transparent; border-radius: 25px; border: 2px dashed #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.1); }
         body[data-theme="lunar"] .b-card:hover { background: rgba(217, 70, 239, 0.1); transform: rotate(2deg) scale(1.05); box-shadow: 0 0 20px rgba(217, 70, 239, 0.4); border-style: solid; }
         body[data-theme="lunar"] .filter-btn, body[data-theme="lunar"] .sub-filter-btn { border-radius: 30px; background: #000; border: 1px solid #86198f; color: #e879f9; }
@@ -278,7 +292,7 @@
             background-size: 40px 40px;
             background-attachment: fixed;
         }
-        body[data-theme="cybergrid"] .main-area, body[data-theme="cybergrid"] .sidebar, body[data-theme="cybergrid"] .user-header, body[data-theme="cybergrid"] .auth-card, body[data-theme="cybergrid"] #filter-wrapper { background: rgba(0, 10, 0, 0.85); border: 1px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); backdrop-filter: blur(5px); border-radius: 0; }
+        body[data-theme="cybergrid"] .main-area, body[data-theme="cybergrid"] .sidebar, body[data-theme="cybergrid"] .user-header, body[data-theme="cybergrid"] .auth-card { background: rgba(0, 10, 0, 0.85); border: 1px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); backdrop-filter: blur(5px); border-radius: 0; }
         body[data-theme="cybergrid"] .b-card { background: rgba(0, 20, 0, 0.9); border: 1px solid #00ff00; color: #00ff00; border-radius: 0; }
         body[data-theme="cybergrid"] .b-card:hover { background: #00ff00; color: #000; box-shadow: 0 0 20px #00ff00; transform: scale(1.05); }
         body[data-theme="cybergrid"] .filter-btn, body[data-theme="cybergrid"] .sub-filter-btn { border-radius: 0; border: 1px solid #00ff00; background: transparent; color: #00ff00; }
@@ -291,7 +305,7 @@
             background: radial-gradient(circle at center, #001a33 0%, #000000 100%);
             background-attachment: fixed;
         }
-        body[data-theme="holohud"] .main-area, body[data-theme="holohud"] .sidebar, body[data-theme="holohud"] .user-header, body[data-theme="holohud"] .auth-card, body[data-theme="holohud"] #filter-wrapper { background: rgba(0, 30, 60, 0.4); border: 1px solid rgba(0, 238, 255, 0.3); border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        body[data-theme="holohud"] .main-area, body[data-theme="holohud"] .sidebar, body[data-theme="holohud"] .user-header, body[data-theme="holohud"] .auth-card { background: rgba(0, 30, 60, 0.4); border: 1px solid rgba(0, 238, 255, 0.3); border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
         body[data-theme="holohud"] .b-card { background: rgba(0, 40, 80, 0.5); border: 1px solid #00eeff; border-radius: 8px; color: #00eeff; }
         body[data-theme="holohud"] .b-card:hover { background: rgba(0, 238, 255, 0.2); box-shadow: inset 0 0 20px rgba(0, 238, 255, 0.5), 0 0 20px rgba(0, 238, 255, 0.5); }
         body[data-theme="holohud"] .filter-btn, body[data-theme="holohud"] .sub-filter-btn { border-radius: 8px; border: 1px solid #00eeff; background: rgba(0, 40, 80, 0.5); color: #00eeff; }
@@ -307,7 +321,7 @@
             background-position: center;
             background-attachment: fixed;
         }
-        body[data-theme="xenoplanet"] .main-area, body[data-theme="xenoplanet"] .sidebar, body[data-theme="xenoplanet"] .user-header, body[data-theme="xenoplanet"] .auth-card, body[data-theme="xenoplanet"] #filter-wrapper { background: rgba(5, 20, 10, 0.6); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 15px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
+        body[data-theme="xenoplanet"] .main-area, body[data-theme="xenoplanet"] .sidebar, body[data-theme="xenoplanet"] .user-header, body[data-theme="xenoplanet"] .auth-card { background: rgba(5, 20, 10, 0.6); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 15px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
         body[data-theme="xenoplanet"] .b-card { background: rgba(0, 0, 0, 0.5); border: 1px solid #059669; color: #34d399; border-radius: 10px; backdrop-filter: blur(5px); }
         body[data-theme="xenoplanet"] .b-card:hover { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; box-shadow: 0 0 20px rgba(52, 211, 153, 0.6); border-color: #34d399; transform: translateY(-5px) scale(1.02); }
         body[data-theme="xenoplanet"] .filter-btn, body[data-theme="xenoplanet"] .sub-filter-btn { border-radius: 8px; border: 1px solid #059669; background: rgba(0, 0, 0, 0.5); color: #34d399; }
@@ -326,7 +340,7 @@
             background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
             background-attachment: fixed;
         }
-        body[data-theme="spacecmd"] .main-area, body[data-theme="spacecmd"] .sidebar, body[data-theme="spacecmd"] .user-header, body[data-theme="spacecmd"] .auth-card, body[data-theme="spacecmd"] #filter-wrapper { background: rgba(15, 15, 20, 0.85); border: 1px solid #334; border-radius: 20px; backdrop-filter: blur(8px); }
+        body[data-theme="spacecmd"] .main-area, body[data-theme="spacecmd"] .sidebar, body[data-theme="spacecmd"] .user-header, body[data-theme="spacecmd"] .auth-card { background: rgba(15, 15, 20, 0.85); border: 1px solid #334; border-radius: 20px; backdrop-filter: blur(8px); }
         body[data-theme="spacecmd"] .b-card { background: linear-gradient(180deg, #1a1a24 0%, #0a0a0f 100%); border: 1px solid #445; border-radius: 15px; color: #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
         body[data-theme="spacecmd"] .b-card:hover { border-color: #cbd5e1; box-shadow: 0 0 15px rgba(255,255,255,0.2); transform: translateY(-5px); }
         body[data-theme="spacecmd"] .filter-btn, body[data-theme="spacecmd"] .sub-filter-btn { border-radius: 15px; background: #1a1a24; border: 1px solid #445; color: #94a3b8; }
