@@ -282,6 +282,19 @@
         body[data-theme="cybergrid"] .filter-btn.active, body[data-theme="cybergrid"] .sub-filter-btn.active { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
         body[data-theme="cybergrid"] .input-group input, body[data-theme="cybergrid"] .control-group select { background: #000; color: #00ff00; border: 1px solid #00ff00; border-radius: 0; }
 
+        /* 7. HOLO HUD THEME */
+        body[data-theme="holohud"] { 
+            --bg: #000a14; --white: rgba(0,20,40,0.6); --text: #00eeff; 
+            background: radial-gradient(circle at center, #001a33 0%, #000000 100%);
+            background-attachment: fixed;
+        }
+        body[data-theme="holohud"] .main-area, body[data-theme="holohud"] .sidebar, body[data-theme="holohud"] .user-header, body[data-theme="holohud"] .auth-card { background: rgba(0, 30, 60, 0.4); border: 1px solid rgba(0, 238, 255, 0.3); border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
+        body[data-theme="holohud"] .b-card { background: rgba(0, 40, 80, 0.5); border: 1px solid #00eeff; border-radius: 8px; color: #00eeff; }
+        body[data-theme="holohud"] .b-card:hover { background: rgba(0, 238, 255, 0.2); box-shadow: inset 0 0 20px rgba(0, 238, 255, 0.5), 0 0 20px rgba(0, 238, 255, 0.5); }
+        body[data-theme="holohud"] .filter-btn, body[data-theme="holohud"] .sub-filter-btn { border-radius: 8px; border: 1px solid #00eeff; background: rgba(0, 40, 80, 0.5); color: #00eeff; }
+        body[data-theme="holohud"] .filter-btn.active, body[data-theme="holohud"] .sub-filter-btn.active { background: rgba(0, 238, 255, 0.8); color: #000; box-shadow: 0 0 15px #00eeff; }
+        body[data-theme="holohud"] .input-group input, body[data-theme="holohud"] .control-group select { background: rgba(0, 20, 40, 0.8); color: #00eeff; border: 1px solid #00eeff; }
+
         /* 8. XENO PLANET THEME */
         body[data-theme="xenoplanet"] { 
             --bg: #000000; --white: rgba(5, 15, 10, 0.7); --text: #34d399; 
@@ -317,9 +330,10 @@
         body[data-theme="spacecmd"] .filter-btn.active, body[data-theme="spacecmd"] .sub-filter-btn.active { background: #e2e8f0; color: #0f0f14; border-color: #e2e8f0; }
         body[data-theme="spacecmd"] .input-group input, body[data-theme="spacecmd"] .control-group select { background: #0a0a0f; color: #e2e8f0; border: 1px solid #445; }
 
+
         /* =======================================================
            MOBILE DRAWER HIGH-VISIBILITY OVERRIDES (ALWAYS CLEAN WHITE)
-           Must remain at the very end to guarantee it overrides ALL themes
+           MUST BE AT THE VERY END OF STYLESHEET
            ======================================================= */
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
@@ -331,30 +345,34 @@
         @media (max-width: 768px) {
             /* Force Clean White Drawer ALWAYS, regardless of Theme or Dark Mode */
             #filter-wrapper,
-            body.dark-mode #filter-wrapper,
-            body[data-theme] #filter-wrapper { 
+            body[data-theme] #filter-wrapper,
+            body.dark-mode #filter-wrapper { 
                 background: #ffffff !important; 
                 border: none !important;
                 border-right: 2px solid var(--primary) !important; 
                 border-radius: 0 !important;
                 backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
                 box-shadow: 5px 0 25px rgba(0,0,0,0.5) !important;
             }
+
             .mobile-drawer-header h3,
-            body.dark-mode .mobile-drawer-header h3,
-            body[data-theme] .mobile-drawer-header h3 { 
+            body[data-theme] .mobile-drawer-header h3,
+            body.dark-mode .mobile-drawer-header h3 { 
                 color: #1e293b !important; 
                 text-shadow: none !important; 
             }
+
             .mobile-drawer-header button,
-            body.dark-mode .mobile-drawer-header button,
-            body[data-theme] .mobile-drawer-header button {
+            body[data-theme] .mobile-drawer-header button,
+            body.dark-mode .mobile-drawer-header button {
                 color: #ef4444 !important;
                 text-shadow: none !important;
             }
+
             .subcategory-filter::before,
-            body.dark-mode .subcategory-filter::before,
-            body[data-theme] .subcategory-filter::before { 
+            body[data-theme] .subcategory-filter::before,
+            body.dark-mode .subcategory-filter::before { 
                 color: #64748b !important; 
                 text-shadow: none !important; 
             }
@@ -362,10 +380,10 @@
             /* Buttons inside mobile drawer */
             #filter-wrapper .filter-btn, 
             #filter-wrapper .sub-filter-btn,
-            body.dark-mode #filter-wrapper .filter-btn, 
-            body.dark-mode #filter-wrapper .sub-filter-btn,
             body[data-theme] #filter-wrapper .filter-btn, 
-            body[data-theme] #filter-wrapper .sub-filter-btn {
+            body[data-theme] #filter-wrapper .sub-filter-btn,
+            body.dark-mode #filter-wrapper .filter-btn, 
+            body.dark-mode #filter-wrapper .sub-filter-btn {
                 background: #f8fafc !important; 
                 color: #1e293b !important; 
                 border: 1px solid #cbd5e1 !important;
@@ -379,25 +397,44 @@
             
             #filter-wrapper .filter-btn:hover, 
             #filter-wrapper .sub-filter-btn:hover,
-            body.dark-mode #filter-wrapper .filter-btn:hover, 
-            body.dark-mode #filter-wrapper .sub-filter-btn:hover,
             body[data-theme] #filter-wrapper .filter-btn:hover, 
-            body[data-theme] #filter-wrapper .sub-filter-btn:hover {
+            body[data-theme] #filter-wrapper .sub-filter-btn:hover,
+            body.dark-mode #filter-wrapper .filter-btn:hover, 
+            body.dark-mode #filter-wrapper .sub-filter-btn:hover {
                 border-color: var(--primary) !important;
+                background: #e2e8f0 !important;
             }
 
             /* Active buttons inside mobile drawer */
             #filter-wrapper .filter-btn.active, 
             #filter-wrapper .sub-filter-btn.active,
-            body.dark-mode #filter-wrapper .filter-btn.active, 
-            body.dark-mode #filter-wrapper .sub-filter-btn.active,
             body[data-theme] #filter-wrapper .filter-btn.active, 
-            body[data-theme] #filter-wrapper .sub-filter-btn.active {
+            body[data-theme] #filter-wrapper .sub-filter-btn.active,
+            body.dark-mode #filter-wrapper .filter-btn.active, 
+            body.dark-mode #filter-wrapper .sub-filter-btn.active {
                 background: var(--primary) !important; 
                 color: #ffffff !important; 
                 border-color: var(--primary) !important; 
                 box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
                 text-shadow: none !important;
+            }
+
+            /* For Dark Mode toggle inside drawer - Dark Mode Force */
+            body.dark-mode #filter-wrapper {
+                background: #0f172a !important;
+                border-right: 2px solid var(--primary) !important;
+            }
+            body.dark-mode .mobile-drawer-header h3 {
+                color: #f1f5f9 !important;
+            }
+            body.dark-mode .subcategory-filter::before {
+                color: #94a3b8 !important;
+            }
+            body.dark-mode #filter-wrapper .filter-btn, 
+            body.dark-mode #filter-wrapper .sub-filter-btn {
+                background: #1e293b !important;
+                color: #cbd5e1 !important;
+                border: 1px solid #334155 !important;
             }
         }
     </style>
