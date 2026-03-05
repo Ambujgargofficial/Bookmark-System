@@ -100,7 +100,6 @@
                 background: var(--white); z-index: 4000; 
                 box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; overflow-y: auto;
                 border-right: 2px solid var(--primary); margin-bottom: 0;
-                backdrop-filter: none !important; /* Force remove blur to prevent mobile glitches */
             }
             #filter-wrapper.open { left: 0; }
             .mobile-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #cbd5e1; }
@@ -110,7 +109,7 @@
             #filter-backdrop {
                 display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                 background: rgba(0,0,0,0.85); z-index: 3999; 
-                backdrop-filter: none !important; /* Removed blur entirely to fix mobile rendering bug */
+                backdrop-filter: none !important;
             }
             #filter-backdrop.open { display: block; }
             
@@ -192,7 +191,7 @@
         #theme-dropdown::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         /* =======================================================
-           DARK MODE & SCIFI THEMES OVERRIDES (STRUCTURAL CHANGES)
+           DARK MODE & SCIFI THEMES OVERRIDES
            ======================================================= */
         body.dark-mode { --bg: #0f172a; --white: #1e293b; --text: #f1f5f9; }
         body.dark-mode .main-area { background: #020617; }
@@ -221,7 +220,7 @@
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb { background: #475569; }
         body.dark-mode #theme-dropdown::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* 1. ALIEN XENOMORPH THEME (Organic, Asymmetrical, Toxic) */
+        /* 1. ALIEN XENOMORPH THEME */
         body[data-theme="alien"] { --bg: #050f05; --white: #0a1f0a; --text: #a3e635; }
         body[data-theme="alien"] .main-area, body[data-theme="alien"] .sidebar, body[data-theme="alien"] .user-header, body[data-theme="alien"] .auth-card { background: #0a1f0a; border: 1px solid #22c55e; border-radius: 30px 5px 30px 5px; }
         body[data-theme="alien"] .b-card { border-radius: 30px 5px 30px 5px; border: 1px solid #a3e635; background: #052e16; color: #a3e635; }
@@ -230,7 +229,7 @@
         body[data-theme="alien"] .filter-btn.active, body[data-theme="alien"] .sub-filter-btn.active { background: #a3e635; color: #000; box-shadow: 0 0 10px #a3e635; }
         body[data-theme="alien"] .input-group input, body[data-theme="alien"] .control-group select { background: #052e16; color: #a3e635; border: 1px dashed #a3e635; border-radius: 15px 3px 15px 3px;}
 
-        /* 2. MECHA CHROME THEME (Industrial, Sharp angles, Armor plating) */
+        /* 2. MECHA CHROME THEME */
         body[data-theme="mecha"] { --bg: #0f172a; --white: #1e293b; --text: #e2e8f0; --radius: 0px; }
         body[data-theme="mecha"] .main-area, body[data-theme="mecha"] .sidebar, body[data-theme="mecha"] .user-header, body[data-theme="mecha"] .auth-card { border-radius: 0; border: 2px solid #475569; background: #1e293b; box-shadow: 8px 8px 0px #0f172a, inset 2px 2px 0px #64748b; }
         body[data-theme="mecha"] .b-card { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); background: #334155; border-left: 4px solid #94a3b8; border-radius: 0; box-shadow: none; }
@@ -239,7 +238,7 @@
         body[data-theme="mecha"] .filter-btn.active, body[data-theme="mecha"] .sub-filter-btn.active { background: #94a3b8; color: #0f172a; }
         body[data-theme="mecha"] .input-group input, body[data-theme="mecha"] .control-group select { background: #0f172a; color: #e2e8f0; border: 1px solid #64748b; border-radius: 0; }
 
-        /* 3. CYBORG PLASMA THEME (Glassmorphism, Neon glow) */
+        /* 3. CYBORG PLASMA THEME */
         body[data-theme="cyborg"] { --bg: #000000; --white: #0a0a0a; --text: #06b6d4; }
         body[data-theme="cyborg"] .main-area, body[data-theme="cyborg"] .sidebar, body[data-theme="cyborg"] .user-header, body[data-theme="cyborg"] .auth-card { background: rgba(6,182,212,0.05); border: 1px solid rgba(6,182,212,0.3); backdrop-filter: blur(10px); }
         body[data-theme="cyborg"] .b-card { border-radius: 15px; border: 1px solid #06b6d4; background: linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(0,0,0,1) 100%); box-shadow: inset 0 0 5px rgba(6,182,212,0.5); }
@@ -248,7 +247,7 @@
         body[data-theme="cyborg"] .filter-btn.active, body[data-theme="cyborg"] .sub-filter-btn.active { background: #06b6d4; color: #000; box-shadow: 0 0 15px #06b6d4; }
         body[data-theme="cyborg"] .input-group input, body[data-theme="cyborg"] .control-group select { background: rgba(0,0,0,0.5); color: #06b6d4; border: 1px solid #06b6d4; }
 
-        /* 4. QUANTUM CORE THEME (Hexagonal / Cyber / Cut-out style) */
+        /* 4. QUANTUM CORE THEME */
         body[data-theme="quantum"] { --bg: #09090b; --white: #18181b; --text: #fbbf24; }
         body[data-theme="quantum"] .main-area, body[data-theme="quantum"] .sidebar, body[data-theme="quantum"] .auth-card { background: #18181b; border: none; box-shadow: 0 0 15px rgba(251, 191, 36, 0.1); clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
         body[data-theme="quantum"] .user-header { border-radius: 0; border: 1px solid #3f3f46; background: #18181b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
@@ -258,7 +257,7 @@
         body[data-theme="quantum"] .filter-btn.active, body[data-theme="quantum"] .sub-filter-btn.active { background: #f59e0b; color: #000; border-color: #f59e0b; font-weight: bold; }
         body[data-theme="quantum"] .input-group input, body[data-theme="quantum"] .control-group select { background: #09090b; color: #fbbf24; border: 1px solid #52525b; border-radius: 0; }
 
-        /* 5. LUNAR ECLIPSE THEME (Floating, Dashed borders, Glowing pill shapes) */
+        /* 5. LUNAR ECLIPSE THEME */
         body[data-theme="lunar"] { --bg: #000000; --white: #0a0a0a; --text: #e879f9; }
         body[data-theme="lunar"] .main-area, body[data-theme="lunar"] .sidebar, body[data-theme="lunar"] .user-header, body[data-theme="lunar"] .auth-card { background: #0a0a0a; border: 1px solid #701a75; border-radius: 40px; box-shadow: inset 0 0 20px rgba(217, 70, 239, 0.05); }
         body[data-theme="lunar"] .b-card { background: transparent; border-radius: 25px; border: 2px dashed #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.1); }
@@ -267,11 +266,7 @@
         body[data-theme="lunar"] .filter-btn.active, body[data-theme="lunar"] .sub-filter-btn.active { background: #d946ef; color: #fff; box-shadow: 0 0 15px #d946ef; border: none; }
         body[data-theme="lunar"] .input-group input, body[data-theme="lunar"] .control-group select { background: #000; color: #e879f9; border: 1px dashed #701a75; border-radius: 20px; }
 
-        /* =======================================================
-           HOLLYWOOD SCI-FI / FUTURISTIC THEMES WITH BACKGROUNDS
-           ======================================================= */
-        
-        /* 6. TRON GRID (Matrix/Cyber Grid Background) */
+        /* 6. TRON GRID THEME */
         body[data-theme="cybergrid"] { 
             --bg: #000000; --white: #0a0a0a; --text: #00ff00; 
             background-color: #000000;
@@ -287,20 +282,7 @@
         body[data-theme="cybergrid"] .filter-btn.active, body[data-theme="cybergrid"] .sub-filter-btn.active { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
         body[data-theme="cybergrid"] .input-group input, body[data-theme="cybergrid"] .control-group select { background: #000; color: #00ff00; border: 1px solid #00ff00; border-radius: 0; }
 
-        /* 7. HOLO HUD (Iron Man / Holographic Interface) */
-        body[data-theme="holohud"] { 
-            --bg: #000a14; --white: rgba(0,20,40,0.6); --text: #00eeff; 
-            background: radial-gradient(circle at center, #001a33 0%, #000000 100%);
-            background-attachment: fixed;
-        }
-        body[data-theme="holohud"] .main-area, body[data-theme="holohud"] .sidebar, body[data-theme="holohud"] .user-header, body[data-theme="holohud"] .auth-card { background: rgba(0, 30, 60, 0.4); border: 1px solid rgba(0, 238, 255, 0.3); border-radius: 10px; backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 238, 255, 0.1); }
-        body[data-theme="holohud"] .b-card { background: rgba(0, 40, 80, 0.5); border: 1px solid #00eeff; border-radius: 8px; color: #00eeff; }
-        body[data-theme="holohud"] .b-card:hover { background: rgba(0, 238, 255, 0.2); box-shadow: inset 0 0 20px rgba(0, 238, 255, 0.5), 0 0 20px rgba(0, 238, 255, 0.5); }
-        body[data-theme="holohud"] .filter-btn, body[data-theme="holohud"] .sub-filter-btn { border-radius: 8px; border: 1px solid #00eeff; background: rgba(0, 40, 80, 0.5); color: #00eeff; }
-        body[data-theme="holohud"] .filter-btn.active, body[data-theme="holohud"] .sub-filter-btn.active { background: rgba(0, 238, 255, 0.8); color: #000; box-shadow: 0 0 15px #00eeff; }
-        body[data-theme="holohud"] .input-group input, body[data-theme="holohud"] .control-group select { background: rgba(0, 20, 40, 0.8); color: #00eeff; border: 1px solid #00eeff; }
-
-        /* 8. XENO PLANET (Alien Wallpaper Background) */
+        /* 8. XENO PLANET THEME */
         body[data-theme="xenoplanet"] { 
             --bg: #000000; --white: rgba(5, 15, 10, 0.7); --text: #34d399; 
             background-color: #000;
@@ -316,7 +298,7 @@
         body[data-theme="xenoplanet"] .filter-btn.active, body[data-theme="xenoplanet"] .sub-filter-btn.active { background: #059669; color: #fff; border-color: #34d399; box-shadow: 0 0 15px #34d399; }
         body[data-theme="xenoplanet"] .input-group input, body[data-theme="xenoplanet"] .control-group select { background: rgba(0, 0, 0, 0.5); color: #34d399; border: 1px solid #059669; border-radius: 8px; }
 
-        /* 9. STAR COMMAND (Deep Space / Spaceship Console) */
+        /* 9. STAR COMMAND THEME */
         body[data-theme="spacecmd"] { 
             --bg: #050508; --white: rgba(20,20,30,0.8); --text: #e2e8f0; 
             background-color: #050508;
@@ -336,7 +318,8 @@
         body[data-theme="spacecmd"] .input-group input, body[data-theme="spacecmd"] .control-group select { background: #0a0a0f; color: #e2e8f0; border: 1px solid #445; }
 
         /* =======================================================
-           MOBILE DRAWER HIGH-VISIBILITY OVERRIDES (ALWAYS CLEAN)
+           MOBILE DRAWER HIGH-VISIBILITY OVERRIDES (ALWAYS CLEAN WHITE)
+           Must remain at the very end to guarantee it overrides ALL themes
            ======================================================= */
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
@@ -346,32 +329,75 @@
         }
 
         @media (max-width: 768px) {
-            /* Light Mode (Default & Custom Themes) - Force Clean White Drawer */
-            body:not(.dark-mode) #filter-wrapper { background: #ffffff !important; border-right: 2px solid var(--primary) !important; }
-            body:not(.dark-mode) .mobile-drawer-header h3 { color: #1e293b !important; }
-            body:not(.dark-mode) .subcategory-filter::before { color: #64748b !important; }
-            body:not(.dark-mode) #filter-wrapper .filter-btn, 
-            body:not(.dark-mode) #filter-wrapper .sub-filter-btn {
-                background: #f8fafc !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important;
-                box-shadow: none !important; clip-path: none !important; border-radius: 8px !important; margin-bottom: 8px !important; font-weight: 600 !important;
+            /* Force Clean White Drawer ALWAYS, regardless of Theme or Dark Mode */
+            #filter-wrapper,
+            body.dark-mode #filter-wrapper,
+            body[data-theme] #filter-wrapper { 
+                background: #ffffff !important; 
+                border: none !important;
+                border-right: 2px solid var(--primary) !important; 
+                border-radius: 0 !important;
+                backdrop-filter: none !important;
+                box-shadow: 5px 0 25px rgba(0,0,0,0.5) !important;
             }
-            body:not(.dark-mode) #filter-wrapper .filter-btn.active, 
-            body:not(.dark-mode) #filter-wrapper .sub-filter-btn.active {
-                background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            .mobile-drawer-header h3,
+            body.dark-mode .mobile-drawer-header h3,
+            body[data-theme] .mobile-drawer-header h3 { 
+                color: #1e293b !important; 
+                text-shadow: none !important; 
+            }
+            .mobile-drawer-header button,
+            body.dark-mode .mobile-drawer-header button,
+            body[data-theme] .mobile-drawer-header button {
+                color: #ef4444 !important;
+                text-shadow: none !important;
+            }
+            .subcategory-filter::before,
+            body.dark-mode .subcategory-filter::before,
+            body[data-theme] .subcategory-filter::before { 
+                color: #64748b !important; 
+                text-shadow: none !important; 
+            }
+            
+            /* Buttons inside mobile drawer */
+            #filter-wrapper .filter-btn, 
+            #filter-wrapper .sub-filter-btn,
+            body.dark-mode #filter-wrapper .filter-btn, 
+            body.dark-mode #filter-wrapper .sub-filter-btn,
+            body[data-theme] #filter-wrapper .filter-btn, 
+            body[data-theme] #filter-wrapper .sub-filter-btn {
+                background: #f8fafc !important; 
+                color: #1e293b !important; 
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important; 
+                clip-path: none !important; 
+                border-radius: 8px !important; 
+                margin-bottom: 8px !important; 
+                font-weight: 600 !important;
+                text-shadow: none !important;
+            }
+            
+            #filter-wrapper .filter-btn:hover, 
+            #filter-wrapper .sub-filter-btn:hover,
+            body.dark-mode #filter-wrapper .filter-btn:hover, 
+            body.dark-mode #filter-wrapper .sub-filter-btn:hover,
+            body[data-theme] #filter-wrapper .filter-btn:hover, 
+            body[data-theme] #filter-wrapper .sub-filter-btn:hover {
+                border-color: var(--primary) !important;
             }
 
-            /* Dark Mode - Force Clean Dark Drawer */
-            body.dark-mode #filter-wrapper { background: #0f172a !important; border-right: 2px solid var(--primary) !important; }
-            body.dark-mode .mobile-drawer-header h3 { color: #f1f5f9 !important; }
-            body.dark-mode .subcategory-filter::before { color: #94a3b8 !important; }
-            body.dark-mode #filter-wrapper .filter-btn, 
-            body.dark-mode #filter-wrapper .sub-filter-btn {
-                background: #1e293b !important; color: #cbd5e1 !important; border: 1px solid #334155 !important;
-                box-shadow: none !important; clip-path: none !important; border-radius: 8px !important; margin-bottom: 8px !important; font-weight: 600 !important;
-            }
+            /* Active buttons inside mobile drawer */
+            #filter-wrapper .filter-btn.active, 
+            #filter-wrapper .sub-filter-btn.active,
             body.dark-mode #filter-wrapper .filter-btn.active, 
-            body.dark-mode #filter-wrapper .sub-filter-btn.active {
-                background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+            body.dark-mode #filter-wrapper .sub-filter-btn.active,
+            body[data-theme] #filter-wrapper .filter-btn.active, 
+            body[data-theme] #filter-wrapper .sub-filter-btn.active {
+                background: var(--primary) !important; 
+                color: #ffffff !important; 
+                border-color: var(--primary) !important; 
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+                text-shadow: none !important;
             }
         }
     </style>
