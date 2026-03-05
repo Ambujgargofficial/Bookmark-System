@@ -119,18 +119,6 @@
             .filter-btn, .sub-filter-btn { text-align: left; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; white-space: normal;}
             .subcategory-filter { border-bottom: none; border-left: 2px dashed #cbd5e1; padding-left: 10px; margin-left: 10px; }
             .subcategory-filter::before { display: block; margin-bottom: 10px; }
-
-            /* Theme-specific solid backgrounds for mobile drawer to prevent transparency bugs */
-            body.dark-mode #filter-wrapper { background: #0f172a !important; }
-            body[data-theme="cyborg"] #filter-wrapper { background: #00151a !important; border-right: 2px solid #06b6d4; }
-            body[data-theme="holohud"] #filter-wrapper { background: #001a33 !important; border-right: 2px solid #00eeff; }
-            body[data-theme="xenoplanet"] #filter-wrapper { background: #05140a !important; border-right: 2px solid #34d399; }
-            body[data-theme="spacecmd"] #filter-wrapper { background: #0a0a0f !important; border-right: 2px solid #e2e8f0; }
-            body[data-theme="cybergrid"] #filter-wrapper { background: #001100 !important; border-right: 2px solid #00ff00; }
-            body[data-theme="lunar"] #filter-wrapper { background: #120012 !important; border-right: 2px dashed #d946ef; }
-            body[data-theme="quantum"] #filter-wrapper { background: #18181b !important; }
-            body[data-theme="mecha"] #filter-wrapper { background: #1e293b !important; }
-            body[data-theme="alien"] #filter-wrapper { background: #0a1f0a !important; }
         }
 
         /* GRID VIEW (Horizontal) */
@@ -347,11 +335,44 @@
         body[data-theme="spacecmd"] .filter-btn.active, body[data-theme="spacecmd"] .sub-filter-btn.active { background: #e2e8f0; color: #0f0f14; border-color: #e2e8f0; }
         body[data-theme="spacecmd"] .input-group input, body[data-theme="spacecmd"] .control-group select { background: #0a0a0f; color: #e2e8f0; border: 1px solid #445; }
 
+        /* =======================================================
+           MOBILE DRAWER HIGH-VISIBILITY OVERRIDES (ALWAYS CLEAN)
+           ======================================================= */
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
-            .user-header .welcome-msg { display: none; } /* Hide welcome msg on mobile to save space */
-            #theme-text { display: none; } /* Hide text on small screens */
-            #theme-dropdown { right: auto !important; left: 0 !important; } /* Fix mobile dropdown positioning */
+            .user-header .welcome-msg { display: none; } 
+            #theme-text { display: none; } 
+            #theme-dropdown { right: auto !important; left: 0 !important; } 
+        }
+
+        @media (max-width: 768px) {
+            /* Light Mode (Default & Custom Themes) - Force Clean White Drawer */
+            body:not(.dark-mode) #filter-wrapper { background: #ffffff !important; border-right: 2px solid var(--primary) !important; }
+            body:not(.dark-mode) .mobile-drawer-header h3 { color: #1e293b !important; }
+            body:not(.dark-mode) .subcategory-filter::before { color: #64748b !important; }
+            body:not(.dark-mode) #filter-wrapper .filter-btn, 
+            body:not(.dark-mode) #filter-wrapper .sub-filter-btn {
+                background: #f8fafc !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important; clip-path: none !important; border-radius: 8px !important; margin-bottom: 8px !important; font-weight: 600 !important;
+            }
+            body:not(.dark-mode) #filter-wrapper .filter-btn.active, 
+            body:not(.dark-mode) #filter-wrapper .sub-filter-btn.active {
+                background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            }
+
+            /* Dark Mode - Force Clean Dark Drawer */
+            body.dark-mode #filter-wrapper { background: #0f172a !important; border-right: 2px solid var(--primary) !important; }
+            body.dark-mode .mobile-drawer-header h3 { color: #f1f5f9 !important; }
+            body.dark-mode .subcategory-filter::before { color: #94a3b8 !important; }
+            body.dark-mode #filter-wrapper .filter-btn, 
+            body.dark-mode #filter-wrapper .sub-filter-btn {
+                background: #1e293b !important; color: #cbd5e1 !important; border: 1px solid #334155 !important;
+                box-shadow: none !important; clip-path: none !important; border-radius: 8px !important; margin-bottom: 8px !important; font-weight: 600 !important;
+            }
+            body.dark-mode #filter-wrapper .filter-btn.active, 
+            body.dark-mode #filter-wrapper .sub-filter-btn.active {
+                background: var(--primary) !important; color: #ffffff !important; border-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+            }
         }
     </style>
 </head>
