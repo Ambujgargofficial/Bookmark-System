@@ -124,11 +124,12 @@
             background: var(--white); width: var(--card-size); height: var(--card-size); border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; text-decoration: none; color: var(--text); 
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; cursor: pointer; transition: all 0.2s;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; /* Prevent native mobile popups on long press */
         }
         .view-grid .b-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         .view-grid .b-icon { font-size: var(--icon-size); margin-bottom: 8px; color: var(--primary); transition: 0.2s; }
         .view-grid .b-title { font-weight: 600; font-size: var(--title-size); text-align: center; word-break: break-word; padding: 0 5px; transition: 0.2s; }
-        .view-grid .action-btns { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; opacity: 0; visibility: hidden; transition: 0.2s; }
+        .view-grid .action-btns { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; }
         .view-grid .b-card:hover .action-btns { opacity: 1; visibility: visible; }
 
         /* LIST VIEW (Vertical/Grid Hybrid) */
@@ -138,16 +139,15 @@
             background: var(--white); width: 100%; padding: 10px 15px; border-radius: 8px; display: flex; 
             align-items: center; justify-content: space-between; text-decoration: none; color: var(--text);
             box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; cursor: pointer; box-sizing: border-box; transition: all 0.3s;
+            -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
         }
         .view-list .card-content { display: flex; align-items: center; gap: 15px; }
         .view-list .b-icon { font-size: 1.5em; color: var(--primary); width: 30px; text-align: center; }
-        .view-list .action-btns { display: flex; gap: 10px; opacity: 0; visibility: hidden; transition: 0.2s; }
+        .view-list .action-btns { display: flex; gap: 10px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 10; }
         .view-list .b-card:hover .action-btns { opacity: 1; visibility: visible; }
 
-        /* MOBILE TOUCH FALLBACK */
-        @media (hover: none) {
-            .view-grid .action-btns, .view-list .action-btns { opacity: 0.7; visibility: visible; }
-        }
+        /* LONG PRESS ACTION VISIBILITY FOR MOBILE */
+        .b-card.show-actions .action-btns { opacity: 1 !important; visibility: visible !important; }
 
         /* ACTIONS & ICONS */
         .action-btn { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; border: none; cursor: pointer; transition: 0.2s; }
@@ -644,7 +644,7 @@
         initApp(); 
     };
 
-    // Global click listener to close theme dropdown when clicking outside
+    // Global click/touch listener to close menus and action states
     window.addEventListener('click', function(e) {
         if (!e.target.closest('.theme-selector-area')) {
             const dropdown = document.getElementById('theme-dropdown');
@@ -653,6 +653,12 @@
             }
         }
     });
+
+    window.addEventListener('touchstart', function(e) {
+        if (!e.target.closest('.b-card')) {
+            document.querySelectorAll('.b-card.show-actions').forEach(c => c.classList.remove('show-actions'));
+        }
+    }, {passive: true});
 
     // --- MOBILE DRAWER TOGGLE ---
     function toggleMobileFilters(forceClose = false) {
@@ -1154,7 +1160,40 @@
                 const card = document.createElement('div');
                 card.className = 'b-card cursor-grab';
                 card.setAttribute('data-id', b.id); // Needed for reordering
+                
+                // Mobile Long Press Logic
+                let pressTimer;
+                let isLongPress = false;
+
+                card.addEventListener('touchstart', (e) => {
+                    isLongPress = false;
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        // Hide actions on other cards
+                        document.querySelectorAll('.b-card').forEach(c => c.classList.remove('show-actions'));
+                        // Show actions on this card
+                        card.classList.add('show-actions');
+                        if (navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+                    }, 500); // 500ms long press
+                }, {passive: true});
+
+                card.addEventListener('touchmove', () => {
+                    clearTimeout(pressTimer);
+                }, {passive: true});
+
+                card.addEventListener('touchend', () => {
+                    clearTimeout(pressTimer);
+                });
+
+                card.addEventListener('touchcancel', () => {
+                    clearTimeout(pressTimer);
+                });
+
                 card.onclick = (e) => { 
+                    if (isLongPress) {
+                        e.preventDefault();
+                        return; // Stop link from opening if it was a long press
+                    }
                     if(!e.target.closest('.action-btn')) window.open(b.url, '_blank'); 
                 };
                 
