@@ -87,37 +87,54 @@
         .sub-filter-btn:hover { border-color: var(--primary); color: var(--primary); background: #e0f2fe; }
         .sub-filter-btn.active { background: #bae6fd; color: #0369a1; border-color: #38bdf8; }
 
-        /* --- MOBILE DRAWER FOR FILTERS --- */
+        /* --- MOBILE DRAWER FOR FILTERS (PURE ISOLATED LAYER) --- */
         .mobile-nav-bar { display: none; }
-        .mobile-drawer-header { display: none; }
+        #mobile-drawer { display: none; }
         #filter-backdrop { display: none; }
-        #filter-wrapper { transition: all 0.3s ease; display: block; margin-bottom: 15px; }
+        .desktop-filters-wrapper { display: block; margin-bottom: 15px; }
 
         @media (max-width: 768px) {
             .mobile-nav-bar { display: flex !important; }
-            #filter-wrapper {
-                position: fixed; top: 0; left: -320px; width: 280px; height: 100vh;
-                background: var(--white); z-index: 4000; 
+            .desktop-filters-wrapper { display: none !important; }
+            
+            #mobile-drawer {
+                display: block; position: fixed; top: 0; left: -320px; width: 280px; height: 100vh;
+                background: #ffffff; z-index: 6000; 
                 box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; overflow-y: auto;
-                border-right: 2px solid var(--primary); margin-bottom: 0;
+                border-right: 2px solid var(--primary); transition: left 0.3s ease;
             }
-            #filter-wrapper.open { left: 0; }
+            #mobile-drawer.open { left: 0; }
+            
             .mobile-drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #cbd5e1; }
-            .mobile-drawer-header h3 { margin: 0; color: var(--text); }
+            .mobile-drawer-header h3 { margin: 0; color: #1e293b; text-shadow: none; font-family: 'Segoe UI', sans-serif;}
             .mobile-drawer-header button { background: transparent; border: none; color: #ef4444; font-size: 1.5em; cursor: pointer; padding: 0; }
             
             #filter-backdrop {
                 display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.85); z-index: 3999; 
-                backdrop-filter: none !important;
+                background: rgba(0,0,0,0.7); z-index: 5999; backdrop-filter: none;
             }
             #filter-backdrop.open { display: block; }
             
-            /* Stack buttons vertically in drawer */
-            .category-filter, .subcategory-filter { flex-direction: column; align-items: stretch; margin-bottom: 20px; }
-            .filter-btn, .sub-filter-btn { text-align: left; padding: 12px 15px; border-radius: 8px; margin-bottom: 5px; white-space: normal;}
-            .subcategory-filter { border-bottom: none; border-left: 2px dashed #cbd5e1; padding-left: 10px; margin-left: 10px; }
-            .subcategory-filter::before { display: block; margin-bottom: 10px; }
+            /* Drawer Internal Elements - PERFECTLY CLEAN OVERRIDES */
+            #mobile-drawer .category-filter, #mobile-drawer .subcategory-filter { flex-direction: column; align-items: stretch; margin-bottom: 20px; }
+            #mobile-drawer .filter-btn, #mobile-drawer .sub-filter-btn { 
+                text-align: left; padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; white-space: normal;
+                background: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1;
+                box-shadow: none; clip-path: none; font-weight: 600; text-shadow: none; font-family: 'Segoe UI', sans-serif;
+            }
+            #mobile-drawer .filter-btn:hover, #mobile-drawer .sub-filter-btn:hover { border-color: var(--primary); background: #e2e8f0; }
+            #mobile-drawer .filter-btn.active, #mobile-drawer .sub-filter-btn.active {
+                background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            #mobile-drawer .subcategory-filter { border-bottom: none; border-left: 2px dashed #cbd5e1; padding-left: 10px; margin-left: 10px; }
+            #mobile-drawer .subcategory-filter::before { display: block; margin-bottom: 10px; color: #64748b; text-shadow: none; font-family: 'Segoe UI', sans-serif;}
+
+            /* Dark Mode Force inside Drawer */
+            body.dark-mode #mobile-drawer { background: #0f172a; border-right: 2px solid var(--primary); }
+            body.dark-mode .mobile-drawer-header h3 { color: #f1f5f9; }
+            body.dark-mode #mobile-drawer .subcategory-filter::before { color: #94a3b8; }
+            body.dark-mode #mobile-drawer .filter-btn, body.dark-mode #mobile-drawer .sub-filter-btn { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
+            body.dark-mode #mobile-drawer .filter-btn.active, body.dark-mode #mobile-drawer .sub-filter-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
         }
 
         /* GRID VIEW (Horizontal) */
@@ -330,112 +347,11 @@
         body[data-theme="spacecmd"] .filter-btn.active, body[data-theme="spacecmd"] .sub-filter-btn.active { background: #e2e8f0; color: #0f0f14; border-color: #e2e8f0; }
         body[data-theme="spacecmd"] .input-group input, body[data-theme="spacecmd"] .control-group select { background: #0a0a0f; color: #e2e8f0; border: 1px solid #445; }
 
-
-        /* =======================================================
-           MOBILE DRAWER HIGH-VISIBILITY OVERRIDES (ALWAYS CLEAN WHITE)
-           MUST BE AT THE VERY END OF STYLESHEET
-           ======================================================= */
         @media (max-width: 600px) {
             .theme-divider { padding-right: 8px !important; margin-right: 2px !important; }
             .user-header .welcome-msg { display: none; } 
             #theme-text { display: none; } 
             #theme-dropdown { right: auto !important; left: 0 !important; } 
-        }
-
-        @media (max-width: 768px) {
-            /* Force Clean White Drawer ALWAYS, regardless of Theme or Dark Mode */
-            #filter-wrapper,
-            body[data-theme] #filter-wrapper,
-            body.dark-mode #filter-wrapper { 
-                background: #ffffff !important; 
-                border: none !important;
-                border-right: 2px solid var(--primary) !important; 
-                border-radius: 0 !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                box-shadow: 5px 0 25px rgba(0,0,0,0.5) !important;
-            }
-
-            .mobile-drawer-header h3,
-            body[data-theme] .mobile-drawer-header h3,
-            body.dark-mode .mobile-drawer-header h3 { 
-                color: #1e293b !important; 
-                text-shadow: none !important; 
-            }
-
-            .mobile-drawer-header button,
-            body[data-theme] .mobile-drawer-header button,
-            body.dark-mode .mobile-drawer-header button {
-                color: #ef4444 !important;
-                text-shadow: none !important;
-            }
-
-            .subcategory-filter::before,
-            body[data-theme] .subcategory-filter::before,
-            body.dark-mode .subcategory-filter::before { 
-                color: #64748b !important; 
-                text-shadow: none !important; 
-            }
-            
-            /* Buttons inside mobile drawer */
-            #filter-wrapper .filter-btn, 
-            #filter-wrapper .sub-filter-btn,
-            body[data-theme] #filter-wrapper .filter-btn, 
-            body[data-theme] #filter-wrapper .sub-filter-btn,
-            body.dark-mode #filter-wrapper .filter-btn, 
-            body.dark-mode #filter-wrapper .sub-filter-btn {
-                background: #f8fafc !important; 
-                color: #1e293b !important; 
-                border: 1px solid #cbd5e1 !important;
-                box-shadow: none !important; 
-                clip-path: none !important; 
-                border-radius: 8px !important; 
-                margin-bottom: 8px !important; 
-                font-weight: 600 !important;
-                text-shadow: none !important;
-            }
-            
-            #filter-wrapper .filter-btn:hover, 
-            #filter-wrapper .sub-filter-btn:hover,
-            body[data-theme] #filter-wrapper .filter-btn:hover, 
-            body[data-theme] #filter-wrapper .sub-filter-btn:hover,
-            body.dark-mode #filter-wrapper .filter-btn:hover, 
-            body.dark-mode #filter-wrapper .sub-filter-btn:hover {
-                border-color: var(--primary) !important;
-                background: #e2e8f0 !important;
-            }
-
-            /* Active buttons inside mobile drawer */
-            #filter-wrapper .filter-btn.active, 
-            #filter-wrapper .sub-filter-btn.active,
-            body[data-theme] #filter-wrapper .filter-btn.active, 
-            body[data-theme] #filter-wrapper .sub-filter-btn.active,
-            body.dark-mode #filter-wrapper .filter-btn.active, 
-            body.dark-mode #filter-wrapper .sub-filter-btn.active {
-                background: var(--primary) !important; 
-                color: #ffffff !important; 
-                border-color: var(--primary) !important; 
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
-                text-shadow: none !important;
-            }
-
-            /* For Dark Mode toggle inside drawer - Dark Mode Force */
-            body.dark-mode #filter-wrapper {
-                background: #0f172a !important;
-                border-right: 2px solid var(--primary) !important;
-            }
-            body.dark-mode .mobile-drawer-header h3 {
-                color: #f1f5f9 !important;
-            }
-            body.dark-mode .subcategory-filter::before {
-                color: #94a3b8 !important;
-            }
-            body.dark-mode #filter-wrapper .filter-btn, 
-            body.dark-mode #filter-wrapper .sub-filter-btn {
-                background: #1e293b !important;
-                color: #cbd5e1 !important;
-                border: 1px solid #334155 !important;
-            }
         }
     </style>
 </head>
@@ -544,6 +460,16 @@
 
 <!-- Filter Backdrop for Mobile Drawer -->
 <div id="filter-backdrop" onclick="toggleMobileFilters()"></div>
+
+<!-- Mobile Filter Drawer (Completely isolated from app-container) -->
+<div id="mobile-drawer">
+    <div class="mobile-drawer-header">
+        <h3><i class="fa-solid fa-tags"></i> Filters</h3>
+        <button onclick="toggleMobileFilters()"><i class="fa-solid fa-circle-xmark"></i></button>
+    </div>
+    <!-- Mobile dynamic filters injected here -->
+    <div id="mobile-drawer-filters"></div>
+</div>
 
 <!-- MAIN APP DASHBOARD -->
 <div id="app-container">
@@ -655,15 +581,8 @@
             <span id="mobile-current-cat" style="margin-left: 10px; font-weight: bold; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw;"></span>
         </div>
 
-        <!-- Filter Wrapper (Acts as left drawer on mobile) -->
-        <div id="filter-wrapper">
-            <div class="mobile-drawer-header">
-                <h3><i class="fa-solid fa-tags"></i> Filters</h3>
-                <button onclick="toggleMobileFilters()"><i class="fa-solid fa-circle-xmark"></i></button>
-            </div>
-            <!-- Dynamic filters will be injected here -->
-            <div id="dynamic-filters"></div>
-        </div>
+        <!-- Desktop filters injected here -->
+        <div id="desktop-filters" class="desktop-filters-wrapper"></div>
 
         <div id="bookmarks-target"></div>
     </div>
@@ -760,7 +679,7 @@
 
     // --- MOBILE DRAWER TOGGLE ---
     function toggleMobileFilters(forceClose = false) {
-        const wrapper = document.getElementById('filter-wrapper');
+        const wrapper = document.getElementById('mobile-drawer');
         const backdrop = document.getElementById('filter-backdrop');
         
         if (forceClose) {
@@ -1079,10 +998,12 @@
     // --- RENDERING ENGINE (UPDATED FOR DRAG & DROP & MOBILE DRAWER) ---
     function renderBookmarks() {
         const container = document.getElementById('bookmarks-target');
-        const filterArea = document.getElementById('dynamic-filters');
+        const filterAreaDesktop = document.getElementById('desktop-filters');
+        const filterAreaMobile = document.getElementById('mobile-drawer-filters');
         
         container.innerHTML = '';
-        filterArea.innerHTML = ''; // Clear filters in the new drawer location
+        filterAreaDesktop.innerHTML = ''; 
+        filterAreaMobile.innerHTML = '';
         
         // Update Mobile Label
         let mobileLabel = activeFilter;
@@ -1121,22 +1042,33 @@
         }
 
         // 2. Render Main Category Filter
-        const filterDiv = document.createElement('div');
-        filterDiv.className = 'category-filter';
-        
-        // 'All' button has static-btn class to prevent dragging
-        let allBtn = `<button class="filter-btn static-btn ${activeFilter === 'All' ? 'active' : ''}" onclick="setCategoryFilter('All')">All</button>`;
-        let catBtns = cats.map(c => `<button class="filter-btn ${activeFilter === c ? 'active' : ''}" onclick="setCategoryFilter('${c}')">${c}</button>`).join('');
-        filterDiv.innerHTML = allBtn + catBtns;
-        filterArea.appendChild(filterDiv);
+        const createFilterDiv = () => {
+            let allBtn = `<button class="filter-btn static-btn ${activeFilter === 'All' ? 'active' : ''}" onclick="setCategoryFilter('All')">All</button>`;
+            let catBtns = cats.map(c => `<button class="filter-btn ${activeFilter === c ? 'active' : ''}" onclick="setCategoryFilter('${c}')">${c}</button>`).join('');
+            const filterDiv = document.createElement('div');
+            filterDiv.className = 'category-filter';
+            filterDiv.innerHTML = allBtn + catBtns;
+            return filterDiv;
+        };
+
+        const desktopFilterDiv = createFilterDiv();
+        const mobileFilterDiv = createFilterDiv();
+        filterAreaDesktop.appendChild(desktopFilterDiv);
+        filterAreaMobile.appendChild(mobileFilterDiv);
 
         // Category Drag and Drop (Sortable)
-        Sortable.create(filterDiv, {
-            animation: 150,
-            filter: '.static-btn', // Prevent 'All' button from being dragged
-            delay: 200, delayOnTouchOnly: true, // Delay to fix mobile touch scroll issue
+        Sortable.create(desktopFilterDiv, {
+            animation: 150, filter: '.static-btn', delay: 200, delayOnTouchOnly: true,
             onEnd: function () {
-                const btns = Array.from(filterDiv.querySelectorAll('.filter-btn:not(.static-btn)'));
+                const btns = Array.from(desktopFilterDiv.querySelectorAll('.filter-btn:not(.static-btn)'));
+                userSettings.categoryOrder = btns.map(b => b.innerText);
+                syncToCloud();
+            }
+        });
+        Sortable.create(mobileFilterDiv, {
+            animation: 150, filter: '.static-btn', delay: 200, delayOnTouchOnly: true,
+            onEnd: function () {
+                const btns = Array.from(mobileFilterDiv.querySelectorAll('.filter-btn:not(.static-btn)'));
                 userSettings.categoryOrder = btns.map(b => b.innerText);
                 syncToCloud();
             }
@@ -1168,22 +1100,34 @@
             hasSubcats = subCatsInCurrentCat.length > 0;
             
             if (hasSubcats) {
-                const subFilterDiv = document.createElement('div');
-                subFilterDiv.className = 'subcategory-filter';
-                
-                let allSubBtn = `<button class="sub-filter-btn static-btn ${activeSubFilter === 'All' ? 'active' : ''}" onclick="setSubCategoryFilter('All')">All</button>`;
-                let subCatBtns = subCatsInCurrentCat.map(c => `<button class="sub-filter-btn ${activeSubFilter === c ? 'active' : ''}" onclick="setSubCategoryFilter('${c}')">${c}</button>`).join('');
-                
-                subFilterDiv.innerHTML = allSubBtn + subCatBtns;
-                filterArea.appendChild(subFilterDiv);
+                const createSubFilterDiv = () => {
+                    let allSubBtn = `<button class="sub-filter-btn static-btn ${activeSubFilter === 'All' ? 'active' : ''}" onclick="setSubCategoryFilter('All')">All</button>`;
+                    let subCatBtns = subCatsInCurrentCat.map(c => `<button class="sub-filter-btn ${activeSubFilter === c ? 'active' : ''}" onclick="setSubCategoryFilter('${c}')">${c}</button>`).join('');
+                    const subFilterDiv = document.createElement('div');
+                    subFilterDiv.className = 'subcategory-filter';
+                    subFilterDiv.innerHTML = allSubBtn + subCatBtns;
+                    return subFilterDiv;
+                };
+
+                const desktopSubDiv = createSubFilterDiv();
+                const mobileSubDiv = createSubFilterDiv();
+                filterAreaDesktop.appendChild(desktopSubDiv);
+                filterAreaMobile.appendChild(mobileSubDiv);
 
                 // Subcategory Drag and Drop (Sortable)
-                Sortable.create(subFilterDiv, {
-                    animation: 150,
-                    filter: '.static-btn',
-                    delay: 200, delayOnTouchOnly: true,
+                Sortable.create(desktopSubDiv, {
+                    animation: 150, filter: '.static-btn', delay: 200, delayOnTouchOnly: true,
                     onEnd: function () {
-                        const btns = Array.from(subFilterDiv.querySelectorAll('.sub-filter-btn:not(.static-btn)'));
+                        const btns = Array.from(desktopSubDiv.querySelectorAll('.sub-filter-btn:not(.static-btn)'));
+                        if(!userSettings.subCategoryOrder) userSettings.subCategoryOrder = {};
+                        userSettings.subCategoryOrder[activeFilter] = btns.map(b => b.innerText);
+                        syncToCloud();
+                    }
+                });
+                Sortable.create(mobileSubDiv, {
+                    animation: 150, filter: '.static-btn', delay: 200, delayOnTouchOnly: true,
+                    onEnd: function () {
+                        const btns = Array.from(mobileSubDiv.querySelectorAll('.sub-filter-btn:not(.static-btn)'));
                         if(!userSettings.subCategoryOrder) userSettings.subCategoryOrder = {};
                         userSettings.subCategoryOrder[activeFilter] = btns.map(b => b.innerText);
                         syncToCloud();
